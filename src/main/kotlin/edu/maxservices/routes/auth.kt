@@ -1,4 +1,22 @@
 package edu.maxservices.routes
 
-class auth {
+import edu.maxservices.apiV
+import io.ktor.server.routing.*
+
+fun Route.authRoute() {
+    route("/api") {
+        route("/$apiV") {
+            route("/auth") {
+                // Registration
+                post {
+
+                }
+                // Logging
+                patch {
+
+                }
+
+            }
+        }
+    }
 }
