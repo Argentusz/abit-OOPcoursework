@@ -1,5 +1,6 @@
 package edu.maxservices.plugins
 import edu.maxservices.models.Student
+import java.lang.Exception
 import java.sql.Connection
 import java.sql.ResultSet
 
@@ -30,6 +31,21 @@ class Helpers {
                 res.add(std)
             }
             return res
+        }
+
+        fun resultSetToStudent(resSet: ResultSet) : Student? {
+            return if (resSet.next()) {
+                Student(
+                    resSet.getInt("id"),
+                    resSet.getString("name"),
+                    resSet.getString("login"),
+                    resSet.getString("password"),
+                    Helpers().Convert().resulSetArrayToMutableInt(resSet, "applies"),
+                    hashMapOf() //TODO
+                )
+            } else {
+                null
+            }
         }
     }
 }

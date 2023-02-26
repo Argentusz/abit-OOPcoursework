@@ -5,6 +5,8 @@ import edu.maxservices.plugins.Helpers.*
 import kotlinx.serialization.Serializable
 import java.sql.Connection
 import java.sql.ResultSet
+import java.sql.PreparedStatement
+import java.sql.*
 
 @Serializable
 class Student (
@@ -50,6 +52,10 @@ class StudentManager(private val conn : Connection) {
             " WHERE id = ?"
     private val DeleteById = "DELETE FROM students WHERE id = ?"
     init {
+        createTable()
+    }
+
+    fun createTable() {
         val statement = conn.createStatement()
         statement.execute(TableCreate)
     }
@@ -59,5 +65,15 @@ class StudentManager(private val conn : Connection) {
         statement.execute(SelectAll)
         val resSet = statement.resultSet
         return Helpers().Parse().resultSetToStudentsList(resSet)
+    }
+
+    fun getById(id: Int): Student {
+        val statement = conn.prepareStatement(SelectById)
+        statement.setInt(1, id)
+        statement.execute()
+        val resSet = statement.resultSet
+        val res = Helpers().Parse().resultSetToStudent(resSet)
+        if (res != null) return res
+        else throw Exception("No student with id = $id found.")
     }
 }
