@@ -2,9 +2,9 @@ package edu.maxservices.models
 
 enum class Exams {
     Russian,
+    Math,
     Ingirmanlandian,
     English,
-    Math,
     IT,
     Physics,
     Literature,

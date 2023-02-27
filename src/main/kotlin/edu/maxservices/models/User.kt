@@ -1,24 +1,23 @@
 package edu.maxservices.models
 
-import kotlinx.serialization.Serializable
 
-@Serializable
-open class User(
-    private val _id: Int,
-    private val _name: String,
-    private val _login: String,
-    private val _password: String,
+sealed class User(
+
 ) {
-    fun getId() : Int {
-        return _id
+    abstract val id: Int
+    abstract val name: String
+    abstract val login: String
+    abstract val password: String
+    fun id() : Int {
+        return id
     }
-    fun getName() : String {
-        return _name
+    fun name() : String {
+        return name
     }
-    fun getLogin() : String {
-        return _login
+    fun login() : String {
+        return login
     }
-    fun getPassword() : String {
-        return _password
+    fun password() : String {
+        return password
     }
 }

@@ -77,13 +77,13 @@ fun Route.exampleRoute2() {
             val apls : MutableList<Pair<Student, Int>> = mutableListOf()
             val applicants = course.getApplicants()
             for (i in applicants.indices) {
-                text += applicants[i].getName() + " "+ applicants[i].getScore(course.getExams()).toString() + "\n"
+                text += applicants[i].name() + " "+ applicants[i].getScore(course.getExams()).toString() + "\n"
             }
             text += "\nSorted:\n"
             var results = course.sortApplicants()
 
             for (i in results) {
-                text += i.first.getName() + " " + i.first.getApplies()[0] + " "+ i.second.toString() + "\n"
+                text += i.first.name() + " " + i.first.getApplies()[0] + " "+ i.second.toString() + "\n"
             }
 
 
@@ -92,12 +92,12 @@ fun Route.exampleRoute2() {
             results = course.budgetApplicants()
             text += "\nBudget:\n"
             for (i in results) {
-                text += i.first.getName() + " "  + i.second.toString() + "\n"
+                text += i.first.name() + " "  + i.second.toString() + "\n"
             }
             results = course.commerceApplicants()
             text += "\nCommerce:\n"
             for (i in results) {
-                text += i.first.getName() + " " + i.second.toString() + "\n"
+                text += i.first.name() + " " + i.second.toString() + "\n"
             }
             call.respond(student0)
         }
