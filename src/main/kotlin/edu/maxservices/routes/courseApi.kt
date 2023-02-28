@@ -1,25 +1,25 @@
 package edu.maxservices.routes
 
 import edu.maxservices.apiV
-import edu.maxservices.models.Student
-import edu.maxservices.models.StudentManager
+import edu.maxservices.models.Course
+import edu.maxservices.models.CourseManager
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.studentApi(studentManager: StudentManager) {
+fun Route.courseApi(courseManager: CourseManager) {
     route("/api") {
         route("/v$apiV") {
-            route("students") {
+            route("courses") {
                 get("{id?}") {
                     val id = call.parameters["id"]
                     if (id == null) {
-                        call.respond(studentManager.getAll())
+                        call.respond(courseManager.getAll())
                     } else {
                         try {
-                            call.respond(studentManager.getById(id.toInt()))
+                            call.respond(courseManager.getById(id.toInt()))
                         } catch (e: Exception) {
                             println(e)
                             call.respond(HttpStatusCode.BadRequest)
@@ -27,18 +27,18 @@ fun Route.studentApi(studentManager: StudentManager) {
                     }
                 }
                 post() {
-                    val student = call.receive<Student>()
-                    call.respond(studentManager.add(student))
+                    val course = call.receive<Course>()
+                    call.respond(courseManager.add(course))
                 }
                 patch() {
-                    val student = call.receive<Student>()
-                    call.respond(studentManager.change(student))
+                    val course = call.receive<Course>()
+                    call.respond(courseManager.change(course))
                 }
                 delete("{id?}") {
                     val id = call.parameters["id"]
                     if (id != null) {
                         try {
-                            call.respond(studentManager.deleteById(id.toInt()))
+                            call.respond(courseManager.deleteById(id.toInt()))
                         } catch (e: Exception) {
                             println(e)
                             call.respond(HttpStatusCode.BadRequest)

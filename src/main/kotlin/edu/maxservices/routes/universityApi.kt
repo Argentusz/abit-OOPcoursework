@@ -1,25 +1,25 @@
 package edu.maxservices.routes
 
 import edu.maxservices.apiV
-import edu.maxservices.models.Student
-import edu.maxservices.models.StudentManager
+import edu.maxservices.models.University
+import edu.maxservices.models.UniversityManager
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.studentApi(studentManager: StudentManager) {
+fun Route.universityApi(universityManager: UniversityManager) {
     route("/api") {
         route("/v$apiV") {
-            route("students") {
+            route("universities") {
                 get("{id?}") {
                     val id = call.parameters["id"]
                     if (id == null) {
-                        call.respond(studentManager.getAll())
+                        call.respond(universityManager.getAll())
                     } else {
                         try {
-                            call.respond(studentManager.getById(id.toInt()))
+                            call.respond(universityManager.getById(id.toInt()))
                         } catch (e: Exception) {
                             println(e)
                             call.respond(HttpStatusCode.BadRequest)
@@ -27,18 +27,24 @@ fun Route.studentApi(studentManager: StudentManager) {
                     }
                 }
                 post() {
-                    val student = call.receive<Student>()
-                    call.respond(studentManager.add(student))
+                    val university = call.receive<University>()
+                    call.respond(universityManager.add(university))
                 }
                 patch() {
-                    val student = call.receive<Student>()
-                    call.respond(studentManager.change(student))
+                    val university = call.receive<University>()
+                    try {
+                        val id = universityManager.change(university)
+                        call.respond(id)
+                    } catch (e: Exception) {
+                        println(e)
+                        call.respond(HttpStatusCode.BadRequest)
+                    }
                 }
                 delete("{id?}") {
                     val id = call.parameters["id"]
                     if (id != null) {
                         try {
-                            call.respond(studentManager.deleteById(id.toInt()))
+                            call.respond(universityManager.deleteById(id.toInt()))
                         } catch (e: Exception) {
                             println(e)
                             call.respond(HttpStatusCode.BadRequest)

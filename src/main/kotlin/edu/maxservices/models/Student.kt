@@ -33,7 +33,6 @@ data class Student (
 }
 
 class StudentManager(private val conn : Connection) {
-
     private val TableCreate =
         "CREATE TABLE IF NOT EXISTS students (" +
                 "    id SERIAL PRIMARY KEY," +
@@ -63,7 +62,7 @@ class StudentManager(private val conn : Connection) {
         val statement = conn.createStatement()
         statement.execute(SelectAll)
         val resSet = statement.resultSet
-        return Helpers().Parse().resultSetToStudentsList(resSet)
+        return Helpers().Parse().resultSetToStudentList(resSet)
     }
 
     fun getById(id: Int): Student {
@@ -73,7 +72,7 @@ class StudentManager(private val conn : Connection) {
         val resSet = statement.resultSet
         val res = Helpers().Parse().resultSetToStudent(resSet)
         if (res != null) return res
-        else throw Exception("(getById) No student with id = $id found.")
+        else throw Exception("(StudentManager.getById) No student with id = $id found.")
     }
 
     fun add(student: Student) : Int {
@@ -82,7 +81,7 @@ class StudentManager(private val conn : Connection) {
         statement.setString(2, student.login())
         statement.setString(3, student.password())
         statement.setArray(4, Helpers().Convert().mListToIntArraySQL(conn, student.getApplies()))
-        statement.setArray(5, Helpers().Convert().examsHashMapTpIntArraySQL(conn, student.getScores()))
+        statement.setArray(5, Helpers().Convert().examsHashMapToIntArraySQL(conn, student.getScores()))
         statement.execute()
         val res = statement.resultSet
         return if (res.next()) {
@@ -98,7 +97,7 @@ class StudentManager(private val conn : Connection) {
         statement.setString(2, student.login())
         statement.setString(3, student.password())
         statement.setArray(4, Helpers().Convert().mListToIntArraySQL(conn, student.getApplies()))
-        statement.setArray(5, Helpers().Convert().examsHashMapTpIntArraySQL(conn, student.getScores()))
+        statement.setArray(5, Helpers().Convert().examsHashMapToIntArraySQL(conn, student.getScores()))
         statement.setInt(6, student.id())
         statement.execute()
     }
@@ -109,7 +108,6 @@ class StudentManager(private val conn : Connection) {
         statement.execute()
         val resSet = statement.resultSet
         if (resSet.next()) return resSet.getInt("id")
-        else throw Exception("(deleteById) No student with id = $id found.")
-
+        else throw Exception("(StudentManager.deleteById) No student with id = $id found.")
     }
 }

@@ -1,9 +1,7 @@
 package edu.maxservices.models
 
 
-sealed class User(
-
-) {
+sealed class User() {
     abstract val id: Int
     abstract val name: String
     abstract val login: String

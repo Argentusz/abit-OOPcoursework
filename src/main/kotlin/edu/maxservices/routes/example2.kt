@@ -75,9 +75,9 @@ fun Route.exampleRoute2() {
 
             var text = "IVT - 2 Budget places, 2 Commerce places\nApplicants:\n"
             val apls : MutableList<Pair<Student, Int>> = mutableListOf()
-            val applicants = course.getApplicants()
+            val applicants = course.applicants()
             for (i in applicants.indices) {
-                text += applicants[i].name() + " "+ applicants[i].getScore(course.getExams()).toString() + "\n"
+                text += applicants[i].name() + " "+ applicants[i].getScore(course.requiredExams()).toString() + "\n"
             }
             text += "\nSorted:\n"
             var results = course.sortApplicants()
