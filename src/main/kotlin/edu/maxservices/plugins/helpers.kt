@@ -101,7 +101,6 @@ class Helpers {
                     resSet.getString("name"),
                     resSet.getString("login"),
                     resSet.getString("password"),
-                    Helpers().Convert().resulSetArrayToMutableInt(resSet, "applies"),
                     Helpers().Convert().resultSetToExamsHashMap(resSet)
                 )
                 res.add(std)
@@ -119,7 +118,6 @@ class Helpers {
                     resSet.getInt("budgetPlaces"),
                     resSet.getInt("commercePlaces"),
                     Helpers().Convert().resultSetToExamsList(resSet),
-                    Helpers().Convert().resultSetToStudentMList(resSet, conn)
                 ))
             }
             return res
@@ -142,6 +140,19 @@ class Helpers {
             return res
         }
 
+        fun resultSetToAdminList(resSet: ResultSet) : List<Admin> {
+            val res = mutableListOf<Admin>()
+            while (resSet.next()) {
+                res.add(Admin(
+                    resSet.getInt("id"),
+                    resSet.getString("name"),
+                    resSet.getString("login"),
+                    resSet.getString("password")
+                ))
+            }
+            return res
+        }
+
         fun resultSetToStudent(resSet: ResultSet) : Student? {
             return if (resSet.next()) {
                 Student(
@@ -149,8 +160,20 @@ class Helpers {
                     resSet.getString("name"),
                     resSet.getString("login"),
                     resSet.getString("password"),
-                    Helpers().Convert().resulSetArrayToMutableInt(resSet, "applies"),
                     Helpers().Convert().resultSetToExamsHashMap(resSet)
+                )
+            } else {
+                null
+            }
+        }
+
+        fun resultSetToAdmin(resSet: ResultSet) : Admin? {
+            return if (resSet.next()) {
+                Admin(
+                    resSet.getInt("id"),
+                    resSet.getString("name"),
+                    resSet.getString("login"),
+                    resSet.getString("password")
                 )
             } else {
                 null
@@ -180,7 +203,6 @@ class Helpers {
                     resSet.getInt("budgetPlaces"),
                     resSet.getInt("commercePlaces"),
                     Helpers().Convert().resultSetToExamsList(resSet),
-                    Helpers().Convert().resultSetToStudentMList(resSet, conn),
                 )
             } else {
                 null

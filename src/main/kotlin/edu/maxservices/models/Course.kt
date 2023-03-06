@@ -13,30 +13,7 @@ data class Course (
     private val budgetPlaces: Int,
     private val commercePlaces: Int,
     private val requiredExams: List<Exams>,
-    private val applicants: MutableList<Student>,
 ) {
-    // Add applicant to list and
-    // add this course to applicant's list
-    fun newApplicant(newbie: Student) {
-        applicants.add(newbie)
-        newbie.getLinkApplies().add(this.id)
-    }
-    // Sort applicants according to exams required in this course
-    fun sortApplicants() : List<Pair<Student, Int>> {
-        val apls : MutableList<Pair<Student, Int>> = mutableListOf()
-        for (i in 0 until applicants.size) {
-            apls.add(i, Pair(applicants[i], applicants[i].getScore(requiredExams)))
-        }
-        return apls.sortedWith(compareBy { it.second }).asReversed().toList()
-    }
-    // Get applicants guaranteed to be on a budget
-    fun budgetApplicants() : List<Pair<Student, Int>> {
-        return sortApplicants().slice(0 until budgetPlaces)
-    }
-    // Get applicants guaranteed to be on commerce
-    fun commerceApplicants() : List<Pair<Student, Int>> {
-        return sortApplicants().slice(budgetPlaces until budgetPlaces + commercePlaces)
-    }
     // Getters
     fun id() : Int {
         return id
@@ -59,9 +36,6 @@ data class Course (
     fun requiredExams(): List<Exams> {
         return requiredExams.toList()
     }
-    fun applicants(): List<Student> {
-        return applicants.toList()
-    }
 }
 
 class CourseManager(private val conn : Connection) {
@@ -73,24 +47,32 @@ class CourseManager(private val conn : Connection) {
                 "    prevMinScore INTEGER NOT NULL DEFAULT 0," +
                 "    budgetPlaces INTEGER NOT NULL DEFAULT 0," +
                 "    commercePlaces INTEGER NOT NULL DEFAULT 0," +
-                "    requiredExams INTEGER[] DEFAULT array[]::integer[]," +
-                "    applicants INTEGER[] DEFAULT array[]::integer[]" +
+                "    requiredExams INTEGER[] DEFAULT array[]::integer[]" +
+                ");"
+    private val CoursesToStudentsTableCreate =
+        "CREATE TABLE IF NOT EXISTS courses_to_students (" +
+                "    course_id INTEGER REFERENCES courses(id)," +
+                "    student_id INTEGER REFERENCES students(id)," +
+                "    student_score INTEGER NOT NULL DEFAULT 0" +
                 ");"
     private val SelectById = "SELECT * FROM courses WHERE id = ?"
     private val SelectAll = "SELECT * FROM courses;"
-    private val Insert = "INSERT INTO courses (name, description, prevMinScore, budgetPlaces, commercePlaces, requiredExams, applicants)" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id;"
-    private val Update = "UPDATE courses SET name = ?, description = ?, prevMinScore = ?, budgetPlaces = ?, commercePlaces = ?, requiredExams = ?, applicants = ?" +
+    private val Insert = "INSERT INTO courses (name, description, prevMinScore, budgetPlaces, commercePlaces, requiredExams)" +
+            "VALUES (?, ?, ?, ?, ?, ?) RETURNING id;"
+    private val Update = "UPDATE courses SET name = ?, description = ?, prevMinScore = ?, budgetPlaces = ?, commercePlaces = ?, requiredExams = ?" +
             " WHERE id = ?"
     private val DeleteById = "DELETE FROM courses WHERE id = ? RETURNING id"
-
+    private val FindApplicants = "SELECT * FROM courses_to_students WHERE course_id = ? ORDER BY student_score"
+    private val NewApplicant = "INSERT INTO courses_to_students (course_id, student_id, student_score)" +
+            "VALUES (?, ?, ?)"
     init {
-        createTable()
+        createTables()
     }
 
-    fun createTable() {
+    fun createTables() {
         val statement = conn.createStatement()
         statement.execute(TableCreate)
+        statement.execute(CoursesToStudentsTableCreate)
     }
 
     fun getAll() : List<Course> {
@@ -117,7 +99,6 @@ class CourseManager(private val conn : Connection) {
         statement.setInt(4, course.budgetPlaces())
         statement.setInt(5, course.commercePlaces())
         statement.setArray(6, Helpers().Convert().examsListToIntArraySQL(course.requiredExams(), conn))
-        statement.setArray(7, Helpers().Convert().studentListToIntArraySQL(course.applicants(), conn))
         statement.execute()
         val res = statement.resultSet
         return if (res.next()) {
@@ -134,8 +115,6 @@ class CourseManager(private val conn : Connection) {
         statement.setInt(3, course.prevMinScore())
         statement.setInt(4, course.budgetPlaces())
         statement.setInt(5, course.commercePlaces())
-        statement.setArray(6, Helpers().Convert().examsListToIntArraySQL(course.requiredExams(), conn))
-        statement.setArray(7, Helpers().Convert().studentListToIntArraySQL(course.applicants(), conn))
         statement.setInt(8, course.id())
         statement.execute()
     }
@@ -147,5 +126,21 @@ class CourseManager(private val conn : Connection) {
         val resSet = statement.resultSet
         if (resSet.next()) return resSet.getInt("id")
         else throw Exception("(courseManager.deleteById) No course with id = $id found.")
+    }
+
+    fun findApplicants(courseId: Int, conn: Connection) : List<Student> {
+        val statement = conn.prepareStatement(FindApplicants)
+
+        statement.execute()
+        val resSet = statement.resultSet
+        return Helpers().Parse().resultSetToStudentList(resSet)
+    }
+
+    fun newApplicant(student: Student, course: Course, conn: Connection) {
+        val statement = conn.prepareStatement(NewApplicant)
+        statement.setInt(1, course.id())
+        statement.setInt(2, student.id())
+        statement.setInt(3, student.getScore(course.requiredExams()))
+        statement.execute()
     }
 }
