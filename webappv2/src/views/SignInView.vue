@@ -3,6 +3,7 @@
 
   <div class="form">
     <img :src="require('@/assets/logo-yellow.png')" width="128px" alt="nlk"/>
+
     <b-alert variant="danger" :show="notFilled">Все поля должны быть заполнены</b-alert>
     <b-form @submit="onSubmit()" class="B-form">
       <b-form-group
