@@ -3,6 +3,7 @@
 
   <div class="form">
     <img :src="require('@/assets/logo-yellow.png')" width="128px" alt="nlk"/>
+    <b-alert variant="danger" :show="notFilled">Все поля должны быть заполнены</b-alert>
     <b-form @submit="onSubmit()" class="B-form">
       <b-form-group
           id="input-group-1"
@@ -29,15 +30,31 @@
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-3" label="Войти" label-for="input-3">
+      <b-form-group id="input-group-3" label="Войти как..." label-for="input-3">
         <b-form-select
             id="input-3"
             v-model="form.role"
             :options="roles"
         ></b-form-select>
       </b-form-group>
+      <b-form-checkbox
+          id="checkbox-1"
+          v-model="form.checked"
+          name="checkbox-1"
+          value="true"
+          unchecked-value="false"
+      >
+        Все лица, события и страны вымышлены
+      </b-form-checkbox>
 
-      <b-button type="submit" variant="warning" class="B-button">Войти</b-button>
+      <b-button
+          type="submit"
+          variant="warning"
+          class="B-button"
+          :disabled="anyFormEmpty()"
+      >Войти</b-button>
+
+
     </b-form>
 
 
@@ -58,12 +75,23 @@ export default {
         role: null,
       },
       roles: [{ text: 'Войти как...', value: null }, 'Студент', 'Представитель ВУЗа'],
+      notFilled: false,
     }
   },
   methods: {
+    anyFormEmpty() {
+      return this.form.login === '' || this.form.password === '' ||
+          this.form.checked === 'false' || this.form.role === null
+    },
     onSubmit() {
       event.preventDefault()
-      console.log(JSON.stringify(this.form))
+      if (!this.anyFormEmpty()) {
+        this.notFilled = false
+        console.log(JSON.stringify(this.form))
+      } else {
+        this.notFilled = true
+      }
+
     }
   }
 }
