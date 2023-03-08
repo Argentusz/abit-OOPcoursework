@@ -1,12 +1,9 @@
 <template>
   <div class="home">
-    <div class="welcomeTitle">
-      Добро пожаловать на<br/>
-      <b>МаксУслуги</b>
-    </div>
+    <p class="welcomeTitle" v-html="$t('welcome')">
+    </p>
     <div class="welcomeSubtitle">
-      Новейшая платформа межпланетной республики Ингирманландия
-      для ВУЗов и студентов, которая облегчит процесс поступления
+    {{$t('welcomeSubtitle')}}
     </div>
   </div>
 </template>

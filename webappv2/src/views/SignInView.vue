@@ -8,30 +8,30 @@
     <b-form @submit="onSubmit()" class="B-form">
       <b-form-group
           id="input-group-1"
-          label="Логин:"
+          :label="$t('login') + ':'"
           label-for="input-1"
       >
         <b-form-input
             id="input-1"
             v-model="form.login"
-            placeholder="Введите логин"
+            :placeholder="$t('enterLogin')"
         ></b-form-input>
       </b-form-group>
 
       <b-form-group
           id="input-group-2"
-          label="Пароль:"
+          :label="$t('password') + ':'"
           label-for="input-2"
       >
         <b-form-input
             id="input-2"
             v-model="form.password"
             type="password"
-            placeholder="Введите пароль"
+            :placeholder="$t('enterPassword') + ':'"
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-3" label="Войти как..." label-for="input-3">
+      <b-form-group id="input-group-3" :label="$t('signAs')" label-for="input-3">
         <b-form-select
             id="input-3"
             v-model="form.role"
@@ -45,7 +45,7 @@
           value="true"
           unchecked-value="false"
       >
-        Все лица, события и страны вымышлены
+        {{ $t('shortCoincidentalWarning') }}
       </b-form-checkbox>
 
       <b-button
@@ -53,7 +53,7 @@
           variant="warning"
           class="B-button"
           :disabled="anyFormEmpty()"
-      >Войти</b-button>
+      >{{$t('signIn')}}</b-button>
 
 
     </b-form>
@@ -75,7 +75,9 @@ export default {
         checked: 'false',
         role: null,
       },
-      roles: [{ text: 'Войти как...', value: null }, 'Студент', 'Представитель ВУЗа'],
+      roles: [{ text: this.$t('signAs'), value: null },
+        {text: this.$t('student'), value: 'Student'},
+        {text: this.$t('universityRepresentative'), value: 'University'}],
       notFilled: false,
     }
   },

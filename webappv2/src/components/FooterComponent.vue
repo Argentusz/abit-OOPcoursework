@@ -1,13 +1,10 @@
 <template>
 <div class="footer">
-  <div class="sub-sign">
-    Все события, персонажи и страны вымышлены.<br/>
-    Любое сходство с реальными событиями случайно.<br/>
-    © Тростин Максим, 2023 г.<br/>
-  </div>
+  <p class="sub-sign" v-html="$t('footerWarning')">
+  </p>
   <div class="flag">
     <img class="flagImg" :src="require('@/assets/ingFlag.png')" alt="Флаг межпланетной Ингирманландской республики"/>
-    Департамент образования межпланетной Ингирманландской республики
+    {{$t('departmentOfEducation')}}
   </div>
 </div>
 </template>

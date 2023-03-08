@@ -7,41 +7,41 @@
       <b-form @submit="onSubmit()" class="B-form">
         <b-form-group
             id="input-group-1"
-            label="Логин:"
+            :label="$t('login')"
             label-for="input-1"
-            description="Логин - уникальное имя, используемое для входа в аккаунт"
+            :description="$t('loginDesc')"
         >
           <b-form-input
               id="input-1"
               v-model="form.login"
-              placeholder="Введите логин"
+              :placeholder="$t('enterLogin')"
           ></b-form-input>
         </b-form-group>
 
         <b-form-group
             id="input-group-1"
-            label="Полное Имя:"
+            :label="$t('fullName')"
             label-for="input-1"
-            description="Вводите имя в соответствии с Вашим паспортом (ФИО)"
+            :description="$t('fullNameDesc')"
         >
           <b-form-input
               id="input-1"
               v-model="form.name"
-              placeholder="Введите имя"
+              :placeholder="$t('enterFullName')"
           ></b-form-input>
         </b-form-group>
 
         <b-form-group
             id="input-group-2"
-            label="Пароль:"
+            :label="$t('password')"
             label-for="input-2"
-            description="Ваш пароль должен содежать хотя бы 6 символов"
+            :description="$t('passwordRestrictionDesc')"
         >
           <b-form-input
               id="input-2"
               v-model="form.password"
               type="password"
-              placeholder="Введите пароль"
+              :placeholder="$t('enterPassword')"
               :state="passwordStrong()"
           ></b-form-input>
         </b-form-group>
@@ -53,7 +53,7 @@
             value="true"
             unchecked-value="false"
         >
-          Все лица, события и страны вымышлены
+          {{ $t('shortCoincidentalWarning') }}
         </b-form-checkbox>
 
         <b-button
@@ -61,14 +61,14 @@
             variant="warning"
             class="B-button"
             :disabled="anyFormEmpty()"
-        >Далее <b-icon-arrow-right/></b-button>
+        > {{$t('next')}} <b-icon-arrow-right/></b-button>
       </b-form>
     </div>
   </Transition>
     <Transition name="fade">
       <div class="form" id="2" v-if="step === 2">
         <img :src="require('@/assets/logo-yellow.png')" width="128px" alt="nlk"/>
-        <div>Введите Ваши результаты экзаменов:</div>
+        <div>{{ $t('enterExams') }}:</div>
         <div class="exams">
           <div class="exam">
             <b-form-checkbox
@@ -76,12 +76,13 @@
                 disabled
             >
               <div class="checkboxName" v-if="!exams__passed.russian">
-              Русский
+              {{ $t('russian') }}
               </div>
             </b-form-checkbox>
             <div class="examInputDiv" v-if="exams__passed.russian">
-            <b-form-input v-model="exams.russian" class="examInput"  type="number" min="0" max="100" step="1" placeholder="Русский"/>
-            <b-form-text id="input-live-help">Баллы за экзамен по русскому языку</b-form-text>
+            <b-form-input v-model="exams.russian" class="examInput"  type="number" min="0" max="100" step="1"
+                          :placeholder="$t('russian')"/>
+            <b-form-text id="input-live-help">{{ $t('enterRussian') }}</b-form-text>
             </div>
           </div>
         <div class="exam">
@@ -90,12 +91,13 @@
               disabled
           >
             <div class="checkboxName" v-if="!exams__passed.math">
-              Математика
+              {{ $t('math') }}
             </div>
           </b-form-checkbox>
           <div class="examInputDiv" v-if="exams__passed.math">
-            <b-form-input v-model="exams.math" class="examInput"  type="number" min="0" max="100" step="1" placeholder="Математика"/>
-            <b-form-text id="input-live-help">Баллы за экзамен по математике</b-form-text>
+            <b-form-input v-model="exams.math" class="examInput"  type="number" min="0" max="100" step="1"
+                          :placeholder=" $t('math') "/>
+            <b-form-text id="input-live-help">{{$t('enterMath')}}</b-form-text>
           </div>
         </div>
         <div class="exam">
@@ -103,13 +105,13 @@
               v-model="exams__passed.ingirmanlandian"
           >
             <div class="checkboxName" v-if="!exams__passed.ingirmanlandian">
-              Ингирманландский
+              {{$t('ingirmanlandian')}}
             </div>
           </b-form-checkbox>
           <div class="examInputDiv" v-if="exams__passed.ingirmanlandian">
             <b-form-input class="examInput"  type="number" min="0" max="100" step="1"
-                          v-model="exams.ingirmanlandian" placeholder="Ингирманландский"/>
-            <b-form-text id="input-live-help">Баллы за экзамен по ингирманландскому</b-form-text>
+                          v-model="exams.ingirmanlandian" :placeholder="$t('ingirmanlandian')"/>
+            <b-form-text id="input-live-help">{{$t('enterIngirmanlandian')}}</b-form-text>
           </div>
         </div>
         <div class="exam">
@@ -117,13 +119,13 @@
               v-model="exams__passed.english"
           >
             <div class="checkboxName" v-if="!exams__passed.english">
-              Английский
+              {{$t('english')}}
             </div>
           </b-form-checkbox>
           <div class="examInputDiv" v-if="exams__passed.english">
             <b-form-input class="examInput"  type="number" min="0" max="100" step="1"
-                          v-model="exams.english" placeholder="Англиский"/>
-            <b-form-text id="input-live-help">Баллы за экзамен по англискому</b-form-text>
+                          v-model="exams.english" :placeholder="$t('english')"/>
+            <b-form-text id="input-live-help">{{$t('enterEnglish')}}</b-form-text>
           </div>
         </div>
         <div class="exam">
@@ -131,13 +133,13 @@
               v-model="exams__passed.IT"
           >
             <div class="checkboxName" v-if="!exams__passed.IT">
-              Информатика
+              {{$t('IT')}}
             </div>
           </b-form-checkbox>
           <div class="examInputDiv" v-if="exams__passed.IT">
             <b-form-input class="examInput"  type="number" min="0" max="100" step="1"
-                          v-model="exams.IT" placeholder="Информатика"/>
-            <b-form-text id="input-live-help">Баллы за экзамен по информатике</b-form-text>
+                          v-model="exams.IT" :placeholder="$t('IT')"/>
+            <b-form-text id="input-live-help">{{$t('enterIT')}}</b-form-text>
           </div>
         </div>
         <div class="exam">
@@ -145,13 +147,13 @@
               v-model="exams__passed.physics"
           >
             <div class="checkboxName" v-if="!exams__passed.physics">
-              Физика
+              {{$t('physics')}}
             </div>
           </b-form-checkbox>
           <div class="examInputDiv" v-if="exams__passed.physics">
             <b-form-input class="examInput"  type="number" min="0" max="100" step="1"
-                          v-model="exams.physics" placeholder="Физика"/>
-            <b-form-text id="input-live-help">Баллы за экзамен по физике</b-form-text>
+                          v-model="exams.physics" :placeholder="$t('physics')"/>
+            <b-form-text id="input-live-help">{{$t('enterPhysics')}}</b-form-text>
           </div>
         </div>
         <div class="exam">
@@ -159,13 +161,13 @@
               v-model="exams__passed.literature"
           >
             <div class="checkboxName" v-if="!exams__passed.literature">
-              Литература
+              {{$t('literature')}}
             </div>
           </b-form-checkbox>
           <div class="examInputDiv" v-if="exams__passed.literature">
             <b-form-input class="examInput"  type="number" min="0" max="100" step="1"
-                          v-model="exams.literature" placeholder="Литература"/>
-            <b-form-text id="input-live-help">Баллы за экзамен по литературе</b-form-text>
+                          v-model="exams.literature" :placeholder="$t('literature')"/>
+            <b-form-text id="input-live-help">{{$t('enterLiterature')}}</b-form-text>
           </div>
         </div>
         </div>
@@ -174,7 +176,7 @@
             variant="warning"
             class="B-button"
             @click="onSubmit()"
-        >Завершить регистрацию</b-button>
+        >{{ $t('finish') }}</b-button>
       </div>
     </Transition>
 
@@ -330,11 +332,11 @@ export default {
   position: fixed;
 }
 .fade-leave-active {
-  transition: opacity 1000ms ease;
+  transition: opacity 500ms ease;
 }
 .fade-enter-active {
-  transition: opacity 1000ms;
-  transition-delay: 1000ms;
+  transition: opacity 500ms;
+  transition-delay: 500ms;
 }
 
 </style>
