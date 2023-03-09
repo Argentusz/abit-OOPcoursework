@@ -1,9 +1,5 @@
 <template>
   <div id="app">
-<!--    <nav>-->
-<!--      <router-link to="/">Home</router-link> |-->
-<!--      <router-link to="/about">About</router-link>-->
-<!--    </nav>-->
     <HeaderComponent :is-welcome-page="($route.path === '/welcome')" :is-logged-in="false"></HeaderComponent>
     <router-view  class="routerView"/>
     <FooterComponent/>
