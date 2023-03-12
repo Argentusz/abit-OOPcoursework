@@ -69,6 +69,13 @@ const msg = {
         budgetPlaces: 'Бюджетные места',
         commercePlaces: 'Контрактные места',
         addCourse: 'Новый курс',
+        howToEnterUniversity: 'Как поступить в 2523 году?',
+        howToStep1: '1. Сдайте экзамены',
+        howToStep2: '2. Зарегистрируйтесь в МаксУслугах',
+        howToStep3: '3. Подайте заявки на интересные вам направления',
+        howToStep4: '4. Следите за списками',
+        howToStep5: '5. Подайте заявление на одно из направлений',
+        howToStep6: '6. Обучайтесь в университете мечты',
     },
     en: {
         signIn: 'Sign In',
@@ -135,6 +142,14 @@ const msg = {
         budgetPlaces: 'Budget places',
         commercePlaces: 'Commerce places',
         addCourse: 'Add new course',
+        howToEnterUniversity: 'How to enter university in 2523?',
+        howToStep1: '1. Pass exams',
+        howToStep2: '2. Sign Up in MaxServices',
+        howToStep3: '3. Apply on courses you intrested in',
+        howToStep4: '4. Keep track on lists',
+        howToStep5: '5. Pick one of courses you`ve applied to',
+        howToStep6: '6. Study in university of your dream',
+
     },
     pl: {
         signIn: 'Zalogować się',
@@ -201,6 +216,14 @@ const msg = {
         budgetPlaces: 'Budżetowe miejsca',
         commercePlaces: 'Płatne miejsca',
         addCourse: 'Nowy kurs',
+        howToEnterUniversity: 'Jak dostać się na uniwersytet w 2523 roku?',
+        howToStep1: '1. Zdaj egzaminy',
+        howToStep2: '2. Zarejestruj się',
+        howToStep3: '3. Aplikuj na interesujące cię kursy',
+        howToStep4: '4. Postępuj zgodnie z listami',
+        howToStep5: '5. Wybierz jeden z kursów, na które aplikowałeś',
+        howToStep6: '6. Studiuj na wymarzonej uczelni',
+
     }
 }
 let lcl = localStorage.getItem('lang')
