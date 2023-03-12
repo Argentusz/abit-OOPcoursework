@@ -1,9 +1,14 @@
 <template>
-  <div class="home">
-    <p class="welcomeTitle" v-html="$t('welcome')">
-    </p>
-    <div class="welcomeSubtitle">
-    {{$t('welcomeSubtitle')}}
+  <div class="home__container">
+    <div class="home">
+        <p class="welcomeTitle" v-html="$t('welcome')"/>
+      <div class="welcomeSubtitle">
+        {{$t('welcomeSubtitle')}}
+      </div>
+    </div>
+
+    <div class="home" id="2">
+
     </div>
   </div>
 </template>

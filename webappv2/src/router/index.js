@@ -4,6 +4,7 @@ import HomeView from "@/views/HomeView.vue"
 import SignInView from "@/views/SignInView.vue";
 import SignUpView from "@/views/SignUpView.vue";
 import StudentPOView from "@/views/StudentPOView.vue";
+import UniversityPOView from "@/views/UniversityPOView.vue";
 
 Vue.use(VueRouter)
 
@@ -24,6 +25,11 @@ const routes = [
     path: '/',
     component: StudentPOView
   },
+  {
+    path: '/u',
+    component: UniversityPOView
+  }
+
 ]
 
 const router = new VueRouter({

@@ -46,18 +46,33 @@
     </div>
   </div>
 
-
+<!-- Picked Courses table -->
   <div class="pickedCoursesTitle">
     {{$t('pickedCoursesTitle')}}:
   </div>
-  <b-table striped borderless responsive small table-variant="dark" :fields="fields" :items="items">
+  <div>
+    <vue-good-table
+        :columns="columns"
+        :rows="rows"
+        style-class="vgt-table striped bordered condensed"
 
-  </b-table>
+    />
+  </div>
+
+
+
+
+
+
+
+
+<!-- Settings sidebar -->
   <b-sidebar id="profile-settings"
              sidebar-class="border-left border-warning"
              bg-variant="dark"
              :title="$t('changeProfileSettings')"
              text-variant="light"
+             width="375px"
              right shadow
 
   >
@@ -72,45 +87,58 @@
       {{$t('fullName')}}: {{studentData.name}}
       <b-form-input :placeholder="$t('newFullName')"/>
     </div>
+    <b-button variant="success" class="mx-2">Сохранить<b-icon-check/></b-button>
+    <div class="change px-2 py-2" id="name">
+      {{$t('login')}}: {{studentData.login}}
+      <b-form-input :placeholder="$t('newLogin')"/>
+    </div>
+    <b-button variant="success" class="mx-2">Сохранить<b-icon-check/></b-button>
     <div class="change px-2 py-2" id="password">
       {{$t('password')}}
       <b-form-input :placeholder="$t('oldPassword')"/>
       <b-form-input class="my-3" :placeholder="$t('newPassword')"/>
     </div>
-
+    <b-button variant="success" class="mx-2">Сохранить<b-icon-check/></b-button>
   </b-sidebar>
 </div>
 </template>
 
 <script>
+
+
 export default {
   name: "StudentPOView",
   data() {
     return {
       studentData: {
         id: 1,
+        login: 'argentusz',
         name: 'Grzegorz Brzęczyszczykiewicz',
         exams: [90, 90, 0, 0, 90, 100, 0],
       },
-      fields: [
+      columns: [
         {
-          key: "name",
+          field: "name",
+          label: this.$t('name')
+        },
+        {
+          field: "uName",
           label: this.$t('ColumnUniversityName')
         },
         {
-          key: "planet",
+          field: "planet",
           label: this.$t('ColumnUniversityPlanet')
         },
         {
-          key: "city",
+          field: "city",
           label: this.$t('ColumnUniversityCity')
         },
       ],
-      items: [
-        {"name": 'ЛИТИ', "planet": 'Земля', "city": 'Санкт-Петербург'},
-        {"name": 'БРУЧ', "planet": 'Земля', "city": 'Санкт-Петербург'},
-        {"name": 'ИЧМО', "planet": 'Земля', "city": 'Санкт-Петербург'},
-        {"name": 'ХИХИ', "planet": 'Марс', "city": 'Милки-Вэй'},
+      rows: [
+        {name: 'ИВТ', uName:'ЛИТИ', planet: 'Земля', city: 'Санкт-Петербург'},
+        {name: 'УУУ', uName:'БРУЧ', planet: 'Земля', city: 'Санкт-Петербург'},
+        {name: 'ЫЫЫ', uName:'ИЧМО', planet: 'Земля', city: 'Санкт-Петербург'},
+        {name: 'ЯЯЯ', uName:'ХИХИ', planet: 'Марс', city: 'Милки-Вэй'},
       ]
     }
   },
@@ -125,6 +153,15 @@ export default {
     },
     setLocale(locale) {
       this.$i18n.locale = locale
+      localStorage.setItem('lang', locale)
+      this.$bvToast.toast(this.$t('pageReloadToastBody'),
+{
+          title: this.$t('pageReloadToast'),
+          variant: 'warning',
+          solid: true,
+          toaster: 'b-toaster-bottom-right'
+        }
+      )
     }
   }
 }

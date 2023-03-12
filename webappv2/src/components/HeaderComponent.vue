@@ -31,6 +31,17 @@ export default {
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale
+      localStorage.setItem('lang', locale)
+      if (!this.isWelcomePage) {
+        this.$bvToast.toast(this.$t('pageReloadToastBody'),
+            {
+              title: this.$t('pageReloadToast'),
+              variant: 'warning',
+              solid: true,
+              toaster: 'b-toaster-bottom-right'
+            }
+        )
+      }
     }
   }
 }

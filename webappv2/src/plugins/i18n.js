@@ -46,9 +46,10 @@ const msg = {
         enterLiterature: 'Введите баллы по литературе',
         finish: 'Завершить',
         universitiesTableTitle: 'Список университетов:',
-        ColumnUniversityName: 'Название',
+        ColumnUniversityName: 'Название университета',
         ColumnUniversityPlanet: 'Планета',
         ColumnUniversityCity: 'Город',
+        name: 'Название',
         helloUser: 'Здравствуйте,',
         yourExamsUser: 'Ваши результаты экзаменов',
         changeProfileSettings: 'Настройки аккаунта',
@@ -59,6 +60,15 @@ const msg = {
         newFullName: 'Новое имя',
         newPassword: 'Новый пароль',
         oldPassword: 'Старый пароль',
+        newLogin: 'Новый логин',
+        pageReloadToast: 'Обновите страницу',
+        pageReloadToastBody: 'К сожалению, при смене языка не все надписи могут измениться. ' +
+            'Обновите страницу для полных изменений',
+        controlPanelTitle: 'Панель управления курсами',
+        prevMinScore: 'Проходной балл',
+        budgetPlaces: 'Бюджетные места',
+        commercePlaces: 'Контрактные места',
+        addCourse: 'Новый курс',
     },
     en: {
         signIn: 'Sign In',
@@ -102,9 +112,10 @@ const msg = {
         enterLiterature: 'Enter score for literature exam',
         finish: 'Finish',
         universitiesTableTitle: 'Universities list:',
-        ColumnUniversityName: 'Name',
+        ColumnUniversityName: 'University Name',
         ColumnUniversityPlanet: 'Planet',
         ColumnUniversityCity: 'City',
+        name: 'Name',
         helloUser: 'Hello,',
         yourExamsUser: 'Your exam scores',
         changeProfileSettings: 'Account Settings',
@@ -115,7 +126,15 @@ const msg = {
         newFullName: 'New full name',
         newPassword: 'New password',
         oldPassword: 'Old password',
-
+        newLogin: 'New login',
+        pageReloadToast: 'Refresh the page',
+        pageReloadToastBody: 'Unfortunately, not all of the text lines can change while switching website language. ' +
+            'Please, refresh the page to complete changes',
+        controlPanelTitle: 'Course control panel',
+        prevMinScore: 'Passing score',
+        budgetPlaces: 'Budget places',
+        commercePlaces: 'Commerce places',
+        addCourse: 'Add new course',
     },
     pl: {
         signIn: 'Zalogować się',
@@ -159,9 +178,10 @@ const msg = {
         enterLiterature: 'Wprowadź oceny za literaturę',
         finish: 'Zakończ',
         universitiesTableTitle: 'Lista uniwersytetów:',
-        ColumnUniversityName: 'Nazwa',
+        ColumnUniversityName: 'Nazwa Uniwersytetu',
         ColumnUniversityPlanet: 'Planeta',
         ColumnUniversityCity: 'Miasto',
+        name: 'Nazwa',
         helloUser: 'Witajcie,',
         yourExamsUser: 'Twoje oceny za egzaminy',
         changeProfileSettings: 'Ustawienia konta',
@@ -172,12 +192,23 @@ const msg = {
         newFullName: 'Nowe imię i nazwisko',
         newPassword: 'Nowe hasło',
         oldPassword: 'Stare hasło',
-
+        newLogin: 'Nowy login',
+        pageReloadToast: 'Odśwież stronę',
+        pageReloadToastBody: 'Niestety, nie wszystkie napisy mogą się zmienić przy zmianie języka. ' +
+            'Odśwież stronę żeby zakończyć zmianę',
+        controlPanelTitle: 'Panel sterowania kursów',
+        prevMinScore: 'Wynik zaliczenia',
+        budgetPlaces: 'Budżetowe miejsca',
+        commercePlaces: 'Płatne miejsca',
+        addCourse: 'Nowy kurs',
     }
 }
-
+let lcl = localStorage.getItem('lang')
+if (lcl === null) {
+    lcl = 'ru'
+}
 export const i18n = new VueI18n({
-    locale: 'ru',
+    locale: lcl,
     fallbackLocale: 'ru',
     messages: msg
 })
