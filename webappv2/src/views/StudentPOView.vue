@@ -93,8 +93,10 @@
     <div class="changeLang px-2 py-2">
       <b-dropdown variant="warning" :text="$t('language')" right>
         <b-dropdown-item @click="setLocale('ru')">Русский</b-dropdown-item>
+        <b-dropdown-item @click="setLocale('ing')">Ingirmanlandin</b-dropdown-item>
         <b-dropdown-item @click="setLocale('en')">English</b-dropdown-item>
         <b-dropdown-item @click="setLocale('pl')">Polski</b-dropdown-item>
+
       </b-dropdown>
     </div>
     <div class="change px-2 py-2" id="name">

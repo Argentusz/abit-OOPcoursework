@@ -10,6 +10,7 @@
     <b-navbar-nav class="ml-auto">
       <b-nav-item-dropdown :text="$t('language')" right>
         <b-dropdown-item @click="setLocale('ru')">Русский</b-dropdown-item>
+        <b-dropdown-item @click="setLocale('ing')">Ingirmanlandin</b-dropdown-item>
         <b-dropdown-item @click="setLocale('en')">English</b-dropdown-item>
         <b-dropdown-item @click="setLocale('pl')">Polski</b-dropdown-item>
       </b-nav-item-dropdown>
