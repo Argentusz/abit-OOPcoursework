@@ -83,6 +83,7 @@ const msg = {
         pageNotFoundDesc: 'Страница, которую вы ищете, не найдена',
         dontHaveAcc: 'Нет аккаунта',
         alreadyHaveAcc: 'Уже есть аккаунт',
+        back: 'Назад',
     },
     en: {
         signIn: 'Sign In',
@@ -163,6 +164,7 @@ const msg = {
         pageNotFoundDesc: 'We couldn`t find the page you`re looking for',
         dontHaveAcc: 'Don`t have an account',
         alreadyHaveAcc: 'Already have an account',
+        back: 'Return',
     },
     pl: {
         signIn: 'Zalogować się',
@@ -243,6 +245,7 @@ const msg = {
         pageNotFoundDesc: 'Nie możemy znaleźć strony której szukasz',
         dontHaveAcc: 'Nie masz konta',
         alreadyHaveAcc: 'Już masz konto',
+        back: 'Powrót',
     },
     ing: {
         signIn: 'Kirjaudu sisään',
@@ -323,7 +326,7 @@ const msg = {
         pageNotFoundDesc: 'Emme löytäneet etsimääsi sivua',
         dontHaveAcc: 'Eikö sinulla ole tiliä',
         alreadyHaveAcc: 'Onko sinulla jo tili',
-
+        back: 'Palata',
     }
 }
 let lcl = localStorage.getItem('lang')

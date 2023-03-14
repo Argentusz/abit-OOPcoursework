@@ -37,10 +37,10 @@
       </div>
     </div>
     <div class="findButtons">
-        <b-button variant="outline-dark" pill class="findBtn">
+        <b-button variant="outline-dark" pill class="findBtn" @click="$router.push('/find/university')">
           <b-icon-search class="gearIcon"/>{{ $t('findUniversity') }}
         </b-button>
-        <b-button variant="outline-dark" pill class="findBtn">
+        <b-button variant="outline-dark" pill class="findBtn" @click="$router.push('/find/course')">
           <b-icon-search class="gearIcon"/>{{ $t('findCourse') }}
         </b-button>
     </div>
@@ -62,7 +62,6 @@
         :columns="columns"
         :rows="rows"
         style-class="vgt-table striped bordered condensed"
-
     />
   </div>
   <div class="custom-shape-divider-bottom-1678748915">
