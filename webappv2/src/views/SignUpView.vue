@@ -62,6 +62,7 @@
             class="B-button"
             :disabled="anyFormEmpty()"
         > {{$t('next')}} <b-icon-arrow-right/></b-button>
+        <div class="signInUpSwap">{{$t('alreadyHaveAcc')}}? <router-link to="/signin" class="prettyLink">{{$t('signIn')}}<b-icon-arrow-right/></router-link></div>
       </b-form>
     </div>
   </Transition>
@@ -222,7 +223,7 @@ export default {
       return this.form.password.length >= 6
     },
     anyFormEmpty() {
-      return this.form.login === '' || this.form.password === '' ||
+      return this.form.login === '' || this.form.password === '' || this.form.name === '' ||
           this.form.checked === 'false' || !this.passwordStrong()
     },
     onCheck() {
@@ -269,8 +270,29 @@ export default {
 </script>
 
 <style scoped>
+.signInUpSwap {
+  margin-top: 5px;
+  align-self: center;
+}
+.prettyLink {
+  color: #ffc107;
+  cursor: pointer;
+  text-decoration: none;
+  background-image: linear-gradient(#ffc107, #ffc107);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 2px;
+  transition: background-size cubic-bezier(0,.5,0,1) 0.3s;
+}
+.prettyLink:hover,
+.prettyLink:focus {
+  text-decoration: none;
+  background-size: 100% 2px;
+}
 .sign-in {
-  background-color: #0b0b0c;
+  background-image:  url("@/assets/stacked-waves-haikei (1).svg");
+  background-repeat: no-repeat;
+  background-size: cover;
   height: calc(100vh - 60px);
   display: flex;
   vertical-align: middle;

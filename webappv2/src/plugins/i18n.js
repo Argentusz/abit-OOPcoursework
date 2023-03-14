@@ -76,6 +76,13 @@ const msg = {
         howToStep4: '4. Следите за списками',
         howToStep5: '5. Подайте заявление на одно из направлений',
         howToStep6: '6. Обучайтесь в университете мечты',
+        save: 'Сохранить',
+        cancel: 'Отменить',
+        pageNotFound: 'Страница не найдена',
+        error: 'Ошибка',
+        pageNotFoundDesc: 'Страница, которую вы ищете, не найдена',
+        dontHaveAcc: 'Нет аккаунта',
+        alreadyHaveAcc: 'Уже есть аккаунт',
     },
     en: {
         signIn: 'Sign In',
@@ -149,7 +156,13 @@ const msg = {
         howToStep4: '4. Keep track on lists',
         howToStep5: '5. Pick one of courses you`ve applied to',
         howToStep6: '6. Study in university of your dream',
-
+        save: 'Save',
+        cancel: 'Cancel',
+        pageNotFound: 'Page not found',
+        error: 'Error',
+        pageNotFoundDesc: 'We couldn`t find the page you`re looking for ',
+        dontHaveAcc: 'Don`t have an account',
+        alreadyHaveAcc: 'Already have an account',
     },
     pl: {
         signIn: 'Zalogować się',
@@ -223,7 +236,13 @@ const msg = {
         howToStep4: '4. Postępuj zgodnie z listami',
         howToStep5: '5. Wybierz jeden z kursów, na które aplikowałeś',
         howToStep6: '6. Studiuj na wymarzonej uczelni',
-
+        save: 'Zapisz',
+        cancel: 'Anuluj',
+        pageNotFound: 'Ta strona nie istnieje',
+        error: 'Błąd',
+        pageNotFoundDesc: 'Nie możemy znaleźć strony której szukasz',
+        dontHaveAcc: 'Nie masz konta',
+        alreadyHaveAcc: 'Już masz konto',
     }
 }
 let lcl = localStorage.getItem('lang')

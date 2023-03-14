@@ -13,8 +13,8 @@
         <b-dropdown-item @click="setLocale('en')">English</b-dropdown-item>
         <b-dropdown-item @click="setLocale('pl')">Polski</b-dropdown-item>
       </b-nav-item-dropdown>
-      <b-button class="bButton" variant="warning" v-if="isWelcomePage" @click="$router.push('/signin')">{{$t('signIn')}}</b-button>
-      <b-button class="bButton" variant="warning" v-if="isWelcomePage" @click="$router.push('/signup')">{{$t('signUp')}}</b-button>
+      <b-button class="bButton" variant="warning" v-if="isWelcomePage || $route.path === '/404'" @click="$router.push('/signin')">{{$t('signIn')}}</b-button>
+      <b-button class="bButton" variant="warning" v-if="isWelcomePage || $route.path === '/404'" @click="$router.push('/signup')">{{$t('signUp')}}</b-button>
     </b-navbar-nav>
 
   </b-navbar>
@@ -25,14 +25,12 @@ export default {
   name: "HeaderComponent",
   props: {
     isWelcomePage: Boolean,
-    isRegistration: Boolean,
-    isLoggedIn: Boolean,
   },
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale
       localStorage.setItem('lang', locale)
-      if (!this.isWelcomePage) {
+      if (!this.isWelcomePage && this.$route.path !== '/404') {
         this.$bvToast.toast(this.$t('pageReloadToastBody'),
             {
               title: this.$t('pageReloadToast'),

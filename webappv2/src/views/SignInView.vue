@@ -55,12 +55,12 @@
           :disabled="anyFormEmpty()"
       >{{$t('signIn')}}</b-button>
 
-
+      <div class="signInUpSwap">{{$t('dontHaveAcc')}}? <router-link to="/signup" class="prettyLink">{{$t('signUp')}}<b-icon-arrow-right/></router-link></div>
     </b-form>
 
 
   </div>
-
+  <img :src="require('@/assets/layered-waves-haikei (2).svg')" alt="" class="waves-bottom"/>
 </div>
 </template>
 
@@ -101,6 +101,25 @@ export default {
 </script>
 
 <style scoped>
+.signInUpSwap {
+  margin-top: 5px;
+  align-self: center;
+}
+.prettyLink {
+  color: #ffc107;
+  cursor: pointer;
+  text-decoration: none;
+  background-image: linear-gradient(#ffc107, #ffc107);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 2px;
+  transition: background-size cubic-bezier(0,.5,0,1) 0.3s;
+}
+.prettyLink:hover,
+.prettyLink:focus {
+  text-decoration: none;
+  background-size: 100% 2px;
+}
 .sign-in {
   background-color: #0b0b0c;
   height: calc(100vh - 60px);
@@ -117,6 +136,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 2;
 }
 .B-form {
   display: flex;
@@ -126,5 +146,10 @@ export default {
 }
 .B-button {
   margin-top: 20px;
+}
+.waves-bottom {
+  position: absolute;
+  bottom: -10px;
+  width: 100vw;
 }
 </style>
