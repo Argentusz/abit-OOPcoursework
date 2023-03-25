@@ -53,6 +53,7 @@
           variant="warning"
           class="B-button"
           :disabled="anyFormEmpty()"
+          @click="auth()"
       >{{$t('signIn')}}</b-button>
 
       <div class="signInUpSwap">{{$t('dontHaveAcc')}}? <router-link to="/signup" class="prettyLink">{{$t('signUp')}}<b-icon-arrow-right/></router-link></div>
@@ -94,6 +95,8 @@ export default {
       } else {
         this.notFilled = true
       }
+    },
+    auth() {
 
     }
   }

@@ -6,6 +6,7 @@ import {i18n} from './plugins/i18n'
 import { BootstrapVue, IconsPlugin  } from 'bootstrap-vue'
 import VueGoodTablePlugin from 'vue-good-table';
 import VueAnimateOnscrollEs from "vue-animate-onscroll";
+import http from "@/plugins/http";
 // import the styles
 import 'vue-good-table/dist/vue-good-table.css'
 // Import Bootstrap and BootstrapVue CSS files (order is important)
@@ -17,6 +18,11 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(VueGoodTablePlugin);
 Vue.use(VueAnimateOnscrollEs);
+Vue.use(http, {
+  baseUrl: "http://localhost:8080"
+})
+Vue.prototype.$baseUrl = "http://localhost:8080"
+export const url = Vue.prototype.$baseUrl
 
 Vue.config.productionTip = false
 Vue.config.silent = true

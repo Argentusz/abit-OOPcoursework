@@ -13,7 +13,6 @@ import FooterComponent from "@/components/FooterComponent.vue";
 </script>
 
 <style scoped>
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -23,4 +22,9 @@ import FooterComponent from "@/components/FooterComponent.vue";
 .routerView {
   margin-top: 64px;
 }
+</style>
+
+<style lang="scss">
+@import "~ag-grid-community/styles/ag-grid.css";
+@import "~ag-grid-community/styles/ag-theme-balham.css";
 </style>

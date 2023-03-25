@@ -82,7 +82,8 @@
             </b-form-checkbox>
             <div class="examInputDiv" v-if="exams__passed.russian">
             <b-form-input v-model="exams.russian" class="examInput"  type="number" min="0" max="100" step="1"
-                          :placeholder="$t('russian')"/>
+                          :placeholder="$t('russian')"
+                          :state="examNormal(this.exams.russian, this.exams__passed.russian)"/>
             <b-form-text id="input-live-help">{{ $t('enterRussian') }}</b-form-text>
             </div>
           </div>
@@ -97,7 +98,8 @@
           </b-form-checkbox>
           <div class="examInputDiv" v-if="exams__passed.math">
             <b-form-input v-model="exams.math" class="examInput"  type="number" min="0" max="100" step="1"
-                          :placeholder=" $t('math') "/>
+                          :placeholder=" $t('math') "
+                          :state="examNormal(this.exams.math, this.exams__passed.math)"/>
             <b-form-text id="input-live-help">{{$t('enterMath')}}</b-form-text>
           </div>
         </div>
@@ -111,7 +113,9 @@
           </b-form-checkbox>
           <div class="examInputDiv" v-if="exams__passed.ingirmanlandian">
             <b-form-input class="examInput"  type="number" min="0" max="100" step="1"
-                          v-model="exams.ingirmanlandian" :placeholder="$t('ingirmanlandian')"/>
+                          v-model="exams.ingirmanlandian"
+                          :placeholder="$t('ingirmanlandian')"
+                          :state="examNormal(this.exams.ingirmanlandian, this.exams__passed.ingirmanlandian)"/>
             <b-form-text id="input-live-help">{{$t('enterIngirmanlandian')}}</b-form-text>
           </div>
         </div>
@@ -125,7 +129,8 @@
           </b-form-checkbox>
           <div class="examInputDiv" v-if="exams__passed.english">
             <b-form-input class="examInput"  type="number" min="0" max="100" step="1"
-                          v-model="exams.english" :placeholder="$t('english')"/>
+                          v-model="exams.english" :placeholder="$t('english')"
+                          :state="examNormal(this.exams.english, this.exams__passed.english)"/>
             <b-form-text id="input-live-help">{{$t('enterEnglish')}}</b-form-text>
           </div>
         </div>
@@ -139,7 +144,8 @@
           </b-form-checkbox>
           <div class="examInputDiv" v-if="exams__passed.IT">
             <b-form-input class="examInput"  type="number" min="0" max="100" step="1"
-                          v-model="exams.IT" :placeholder="$t('IT')"/>
+                          v-model="exams.IT" :placeholder="$t('IT')"
+                          :state="examNormal(this.exams.IT, this.exams__passed.IT)"/>
             <b-form-text id="input-live-help">{{$t('enterIT')}}</b-form-text>
           </div>
         </div>
@@ -153,7 +159,8 @@
           </b-form-checkbox>
           <div class="examInputDiv" v-if="exams__passed.physics">
             <b-form-input class="examInput"  type="number" min="0" max="100" step="1"
-                          v-model="exams.physics" :placeholder="$t('physics')"/>
+                          v-model="exams.physics" :placeholder="$t('physics')"
+                          :state="examNormal(this.exams.physics, this.exams__passed.physics)"/>
             <b-form-text id="input-live-help">{{$t('enterPhysics')}}</b-form-text>
           </div>
         </div>
@@ -167,7 +174,8 @@
           </b-form-checkbox>
           <div class="examInputDiv" v-if="exams__passed.literature">
             <b-form-input class="examInput"  type="number" min="0" max="100" step="1"
-                          v-model="exams.literature" :placeholder="$t('literature')"/>
+                          v-model="exams.literature" :placeholder="$t('literature')"
+                          :state="examNormal(this.exams.literature, this.exams__passed.literature)"/>
             <b-form-text id="input-live-help">{{$t('enterLiterature')}}</b-form-text>
           </div>
         </div>
@@ -177,6 +185,7 @@
             variant="warning"
             class="B-button"
             @click="onSubmit()"
+            :disabled="!allExamsNormal()"
         >{{ $t('finish') }}</b-button>
       </div>
     </Transition>
@@ -221,6 +230,18 @@ export default {
   methods: {
     passwordStrong() {
       return this.form.password.length >= 6
+    },
+    examNormal(exam, passed) {
+      return exam > 0 && exam <= 100 || !passed;
+    },
+    allExamsNormal() {
+      return (this.exams.russian > 0 && this.exams.russian <= 100 || !this.exams__passed.russian) &&
+          (this.exams.math > 0 && this.exams.math <= 100 || !this.exams__passed.math) &&
+          (this.exams.ingirmanlandian > 0 && this.exams.ingirmanlandian <= 100 || !this.exams__passed.ingirmanlandian)&&
+          (this.exams.english > 0 && this.exams.english <= 100 || !this.exams__passed.english)&&
+          (this.exams.IT > 0 && this.exams.IT <= 100 || !this.exams__passed.IT)&&
+          (this.exams.physics > 0 && this.exams.physics <= 100 || !this.exams__passed.physics) &&
+          (this.exams.literature > 0 && this.exams.literature <= 100 || !this.exams__passed.literature)
     },
     anyFormEmpty() {
       return this.form.login === '' || this.form.password === '' || this.form.name === '' ||

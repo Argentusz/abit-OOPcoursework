@@ -167,6 +167,7 @@ class Helpers {
             }
         }
 
+
         fun resultSetToAdmin(resSet: ResultSet) : Admin? {
             return if (resSet.next()) {
                 Admin(

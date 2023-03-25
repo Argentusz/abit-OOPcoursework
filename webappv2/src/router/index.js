@@ -8,6 +8,7 @@ import UniversityPOView from "@/views/UniversityPOView.vue";
 import FindUniversity from "@/views/FindUniversity.vue";
 import FindCourse from "@/views/FindCourse.vue";
 import PageNotFoundView from "@/views/PageNotFoundView.vue";
+import TestGrid from "@/views/TestGrid.vue";
 
 Vue.use(VueRouter)
 
@@ -43,6 +44,10 @@ const routes = [
   {
     path: '/404',
     component: PageNotFoundView
+  },
+  {
+    path: '/test',
+    component: TestGrid
   },
   {
     path: '/*',

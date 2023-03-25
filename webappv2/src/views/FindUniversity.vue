@@ -5,59 +5,81 @@
       {{$t('findUniversity')}}
     </div>
     <div class="table-div">
-      <vue-good-table
-          :columns="columns"
-          :rows="rows"
-          style-class="vgt-table striped bordered condensed"
-          class="table"
-      />
+      <ag-grid-vue
+        style="width: 1000px; height: 60vh;"
+        class="ag-theme-balham-dark"
+        :columnDefs="columns"
+        :rowData="rows"
+      >
+      </ag-grid-vue>
     </div>
   </div>
 </template>
 
 <script>
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-balham.css";
+import { AgGridVue } from "ag-grid-vue";
 export default {
   name: "FindUniversity",
   data() {
     return {
-      columns: [
-        {
-          field: "uName",
-          label: this.$t('ColumnUniversityName')
-        },
-        {
-          field: "planet",
-          label: this.$t('ColumnUniversityPlanet')
-        },
-        {
-          field: "city",
-          label: this.$t('ColumnUniversityCity')
-        },
-      ],
-      rows: [
-        {
-          uName: 'ЛИТИ',
-          planet: 'Земля',
-          city: 'Санкт-Петербург'
-        },
-        {
-
-          uName: 'БРУЧ',
-          planet: 'Земля',
-          city: 'Санкт-Петербург'
-        },
-        {
-          uName: 'ИЧМО',
-          planet: 'Земля',
-          city: 'Санкт-Петербург'
-        },
-        {
-          uName: 'ХИХИ',
-          planet: 'Марс',
-          city: 'Милки-Вэй'
-        },
-      ]
+      columns: null,
+      rows: null,
     }
+  },
+  components: {
+    AgGridVue,
+  },
+  beforeMount() {
+    this.columns = [
+      {
+        field: "uName",
+        headerName: this.$t('ColumnUniversityName'),
+        width: 550,
+        filter: true, floatingFilter: true,
+        floatingFilterComponentParams: { suppressFilterButton: true },
+      },
+      {
+        field: "planet",
+        headerName: this.$t('ColumnUniversityPlanet'),
+        width: 100,
+        filter: true, floatingFilter: true,
+        floatingFilterComponentParams: { suppressFilterButton: true },
+      },
+      {
+        field: "city",
+        headerName: this.$t('ColumnUniversityCity'),
+        width: 350,
+        filter: true, floatingFilter: true,
+        floatingFilterComponentParams: { suppressFilterButton: true },
+      },
+    ];
+    this.rows = [
+      { uName: 'ЛИТИ', planet: 'Земля', city: 'Санкт-Петербург' },
+      { uName: 'БРУЧ', planet: 'Земля', city: 'Санкт-Петербург'},
+      { uName: 'ИЧМО', planet: 'Земля', city: 'Санкт-Петербург'},
+      { uName: 'ХИХИ0', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ1', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ2', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ3', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ4', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ5', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ6', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ7', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ8', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ9', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ10', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ11', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ12', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ13', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ14', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ15', planet: 'Марс', city: 'Милки-Вэй'},
+      { uName: 'ХИХИ16', planet: 'Марс', city: 'Милки-Вэй'},
+    ]
+  },
+  methods: {
+
   }
 }
 </script>
@@ -100,8 +122,11 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 3vh;
 }
-.table {
-  width: 80vw;
+.ag-theme-balham-dark {
+  --ag-odd-row-background-color: #343a40;
+  --ag-header-foreground-color: #ffc107;
+  --ag-border-color: #ffc107;
 }
 </style>
