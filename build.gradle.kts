@@ -31,4 +31,6 @@ dependencies {
     implementation("org.postgresql:postgresql:$postgres_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-server-cors-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-http-redirect-jvm:$ktor_version")
 }

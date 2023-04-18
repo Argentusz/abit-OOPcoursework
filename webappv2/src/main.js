@@ -7,6 +7,7 @@ import { BootstrapVue, IconsPlugin  } from 'bootstrap-vue'
 import VueGoodTablePlugin from 'vue-good-table';
 import VueAnimateOnscrollEs from "vue-animate-onscroll";
 import http from "@/plugins/http";
+import jsPDF from "jspdf";
 // import the styles
 import 'vue-good-table/dist/vue-good-table.css'
 // Import Bootstrap and BootstrapVue CSS files (order is important)

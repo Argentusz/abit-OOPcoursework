@@ -31,7 +31,7 @@
 
           <b-icon-gear class="gearIcon"/>  {{ $t('changeProfileSettings')}}
         </b-button>
-        <b-button class="exitBtn" variant="danger">
+        <b-button class="exitBtn" variant="danger" @click="exit()">
           <b-icon-box-arrow-right class="gearIcon"/>{{$t('exit')}}
         </b-button>
       </div>
@@ -58,15 +58,34 @@
     {{$t('pickedCoursesTitle')}}:
   </div>
 
-
-  <ag-grid-vue
-      style="width: 100%; height: 30vh;"
-      class="ag-theme-balham-dark"
-      :columnDefs="columns"
-      :rowData="rows"
-  >
-  </ag-grid-vue>
-
+  <div>
+    <div class="table-btns">
+      <b-dropdown variant="warning" right dropup>
+        <template #button-content>
+          <img height="30px" class="table-btn" :src="require('@/assets/download.svg')">
+        </template>
+        <b-dropdown-item-button
+        @click="JSONConv()"
+        >
+          JSON
+        </b-dropdown-item-button>
+        <b-dropdown-item-button
+            @click="PDFConv()"
+        >
+          PDF
+        </b-dropdown-item-button>
+      </b-dropdown>
+    </div>
+    <div>
+    <ag-grid-vue
+        style="width: 100%; height: 30vh;"
+        class="ag-theme-balham-dark"
+        :columnDefs="columns"
+        :rowData="rows"
+    >
+    </ag-grid-vue>
+    </div>
+  </div>
 
 
 
@@ -128,6 +147,9 @@
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 import { AgGridVue } from "ag-grid-vue";
+import jsPDF from "jspdf";
+import consts from "@/helpers/consts"
+import {url} from "@/main";
 
 export default {
   name: "StudentPOView",
@@ -145,49 +167,60 @@ export default {
       columns: [
         {
           field: "name",
-          label: this.$t('name'),
+          headerName: this.$t('name'),
           width: 400,
         },
         {
           field: "uName",
-          label: this.$t('ColumnUniversityName'),
+          headerName: this.$t('ColumnUniversityName'),
           width: 400,
         },
         {
           field: "prevMinScore",
-          label: this.$t('prevMinScore'),
+          headerName: this.$t('prevMinScore'),
           width: 200,
         },
         {
           field: "budgetPlaces",
-          label: this.$t('budgetPlaces'),
+          headerName: this.$t('budgetPlaces'),
           width: 200,
         },
         {
           field: "commercePlaces",
-          label: this.$t('commercePlaces'),
+          headerName: this.$t('commercePlaces'),
           width: 200,
         },
         {
           field: "planet",
-          label: this.$t('ColumnUniversityPlanet'),
+          headerName: this.$t('ColumnUniversityPlanet'),
           width: 150,
         },
         {
           field: "city",
-          label: this.$t('ColumnUniversityCity'),
+          headerName: this.$t('ColumnUniversityCity'),
           width: 260,
         },
       ],
-      rows: [
-        {name: 'ИВТ', uName:'ЛИТИ', prevMinScore: 200, budgetPlaces: 50, commercePlaces: 50, planet: 'Земля', city: 'Санкт-Петербург'},
-        {name: 'УУУ', uName:'БРУЧ', prevMinScore: 220, budgetPlaces: 19, commercePlaces: 19, planet: 'Земля', city: 'Санкт-Петербург'},
-        {name: 'ЫЫЫ', uName:'ИЧМО', prevMinScore: 205, budgetPlaces: 10, commercePlaces: 27, planet: 'Земля', city: 'Санкт-Петербург'},
-        {name: 'ЯЯЯ', uName:'ХИХИ', prevMinScore: 295, budgetPlaces: 2, commercePlaces: 20, planet: 'Марс', city: 'Милки-Вэй'},
-      ]
+      rows: null
     }
   },
+  beforeMount() {
+    const id = localStorage.getItem('uid')
+    if (id == null) {
+      this.$router.push('/signin')
+    }
+    this.$http.get(url + "/api/" + consts.apiV + "/students/to_courses/" + id).then(
+      response=>{
+        console.log(response)
+        this.rows = response.data
+      }
+    )
+  },
   methods: {
+    exit() {
+      localStorage.clear()
+      this.$router.go()
+    },
     makeInitials() {
       const arrayName = this.studentData.name.split(" ", 2)
       let res = ''
@@ -207,6 +240,29 @@ export default {
           toaster: 'b-toaster-bottom-right'
         }
       )
+    },
+    JSONConv() {
+      const a = document.createElement("a");
+      console.log(JSON.stringify(this.rows))
+      let text = JSON.stringify(this.rows, null, '\t')
+      const file = new Blob([text], {type: 'application/json'});
+      a.href = URL.createObjectURL(file);
+      a.download = "applies.json";
+      a.click();
+    },
+    PDFConv() {
+      let dataStr = ""
+      this.rows.forEach(i=>{
+        dataStr += i.name + " " + i.uName + " " + i.prevMinScore + " " + i.budgetPlaces + " " + i.commercePlaces + " " + i.planet + " " + i.city + "\r\n"
+      })
+      const customFont = consts.font
+      const doc = new jsPDF()
+      doc.addFileToVFS("customFont.ttf", customFont);
+      doc.addFont("customFont.ttf", "customFont", "normal");
+      doc.setFont("customFont");
+      doc.text(dataStr, 10,10, {lang: 'ru'})
+      doc.save("test.pdf")
+
     }
   }
 }
@@ -338,5 +394,14 @@ export default {
   --ag-odd-row-background-color: #343a40;
   --ag-header-background-color: #ffc107;
   --ag-header-foreground-color: #343a40;
+}
+.table-btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+}
+.table-btn {
+  padding: 5px;
 }
 </style>

@@ -1,6 +1,7 @@
 package edu.maxservices.models
 
 import edu.maxservices.plugins.Helpers
+import edu.maxservices.plugins.courseFull
 import kotlinx.serialization.Serializable
 import java.sql.Connection
 
@@ -24,6 +25,13 @@ data class Student (
         return scores
     }
 }
+
+@Serializable
+data class CoursesToStudents(
+    val courseId: Int,
+    val studentId: Int,
+    val studentScore: Int,
+)
 
 class StudentManager(private val conn : Connection) {
     private val TableCreate =
@@ -102,5 +110,32 @@ class StudentManager(private val conn : Connection) {
         val resSet = statement.resultSet
         if (resSet.next()) return resSet.getInt("id")
         else throw Exception("(StudentManager.deleteById) No student with id = $id found.")
+    }
+
+    fun findApplies(id: Int) : List<courseFull> {
+        val statement = conn.prepareStatement(FindApplies)
+        statement.setInt(1, id)
+        statement.execute()
+        val resSet = statement.resultSet
+        val crsStd = Helpers().Parse().resultSetToCourseStudentList(resSet)
+        val res = mutableListOf<courseFull>()
+        crsStd.forEach {
+            val course = CourseManager(conn).getById(it.courseId)
+            val university = CourseManager(conn).getUniversity(it.courseId)
+            val resItem = courseFull(
+                name = course.name(),
+                uName = university.name(),
+                prevMinScore = course.prevMinScore(),
+                budgetPlaces = course.budgetPlaces(),
+                commercePlaces = course.commercePlaces(),
+                // TODO !!!!
+                planet = "Земля",
+                city = "Санкт-Петербург",
+            )
+            res.add(resItem)
+        }
+
+
+        return res
     }
 }

@@ -4,7 +4,7 @@
   <div class="form">
     <img :src="require('@/assets/logo-yellow.png')" width="128px" alt="nlk"/>
 
-    <b-alert variant="danger" :show="notFilled">Все поля должны быть заполнены</b-alert>
+    <b-alert class="alertWrongAuth" variant="danger" :show="wrongAuth">Неверный логин или пароль</b-alert>
     <b-form @submit="onSubmit()" class="B-form">
       <b-form-group
           id="input-group-1"
@@ -49,7 +49,7 @@
       </b-form-checkbox>
 
       <b-button
-          type="submit"
+          type="button"
           variant="warning"
           class="B-button"
           :disabled="anyFormEmpty()"
@@ -66,6 +66,7 @@
 </template>
 
 <script>
+import {url} from "@/main";
 export default {
   name: "SignInView",
   data() {
@@ -79,7 +80,12 @@ export default {
       roles: [{ text: this.$t('signAs'), value: null },
         {text: this.$t('student'), value: 'Student'},
         {text: this.$t('universityRepresentative'), value: 'University'}],
-      notFilled: false,
+      wrongAuth: false,
+    }
+  },
+  beforeMount() {
+    if (localStorage.getItem('uid') !== null) {
+      this.$router.push('/')
     }
   },
   methods: {
@@ -90,13 +96,29 @@ export default {
     onSubmit() {
       event.preventDefault()
       if (!this.anyFormEmpty()) {
-        this.notFilled = false
+        this.wrongAuth = false
         console.log(JSON.stringify(this.form))
       } else {
-        this.notFilled = true
+        this.wrongAuth = true
       }
     },
     auth() {
+
+      this.$http.patch(url + "/api/v1/auth",
+  {login: this.form.login, password: this.form.password, role: 1, name: ""}).then(
+        response=>{
+          console.log(response)
+          const uid = response.data
+          const rs = response.status
+          console.log(uid)
+          console.log(rs)
+          if (rs === 200) {
+            this.wrongAuth = false
+            localStorage.setItem('uid', uid)
+            this.$router.push('/')
+          }
+      })
+      this.wrongAuth = true
 
     }
   }
@@ -104,6 +126,12 @@ export default {
 </script>
 
 <style scoped>
+.alertWrongAuth {
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  text-align: center;
+}
 .signInUpSwap {
   margin-top: 5px;
   align-self: center;

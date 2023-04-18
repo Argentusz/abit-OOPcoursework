@@ -1,10 +1,7 @@
 package edu.maxservices.plugins
 
 import edu.maxservices.connectDB
-import edu.maxservices.models.AdminManager
-import edu.maxservices.models.CourseManager
-import edu.maxservices.models.StudentManager
-import edu.maxservices.models.UniversityManager
+import edu.maxservices.models.*
 import edu.maxservices.routes.*
 
 import io.ktor.server.routing.*
@@ -16,10 +13,12 @@ fun Application.configureRouting() {
     val universityManager = UniversityManager(dbConn)
     val courseManager = CourseManager(dbConn)
     val adminManager = AdminManager(dbConn)
+    val authManager = AuthManager(dbConn)
     routing {
         studentApi(studentManager)
         universityApi(universityManager)
         courseApi(courseManager)
         adminApi(adminManager)
+        authApi(authManager)
     }
 }

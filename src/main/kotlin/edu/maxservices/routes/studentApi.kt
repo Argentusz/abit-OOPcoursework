@@ -13,6 +13,24 @@ fun Route.studentApi(studentManager: StudentManager) {
     route("/api") {
         route("/v$apiV") {
             route("students") {
+
+                route("/to_courses") {
+                    get("{id?}") {
+                        val id = call.parameters["id"]
+                        if (id == null) {
+                            call.respond(HttpStatusCode.Forbidden)
+                        } else {
+                            try {
+                                call.respond(studentManager.findApplies(id.toInt()))
+
+                            } catch(e: Exception) {
+                                println(e)
+                                call.respond(HttpStatusCode.BadRequest)
+                            }
+                        }
+                    }
+                }
+
                 get("{id?}") {
                     val id = call.parameters["id"]
                     if (id == null) {

@@ -15,6 +15,7 @@
               id="input-1"
               v-model="form.login"
               :placeholder="$t('enterLogin')"
+              :state="allowedSymbols(form.login)"
           ></b-form-input>
         </b-form-group>
 
@@ -28,6 +29,7 @@
               id="input-1"
               v-model="form.name"
               :placeholder="$t('enterFullName')"
+              :state="allowedSymbols(form.name, true)"
           ></b-form-input>
         </b-form-group>
 
@@ -42,7 +44,7 @@
               v-model="form.password"
               type="password"
               :placeholder="$t('enterPassword')"
-              :state="passwordStrong()"
+              :state="passwordStrong() && allowedSymbols(form.password)"
           ></b-form-input>
         </b-form-group>
 
@@ -228,9 +230,17 @@ export default {
     }
   },
   methods: {
+    allowedSymbols(str, spacesAllowed = false) {
+      if (spacesAllowed) {
+        return /^[a-zA-Z0-9 ]+$/.test(str);
+      } else {
+        return /^[a-zA-Z0-9]+$/.test(str);
+      }
+    },
     passwordStrong() {
       return this.form.password.length >= 6
     },
+
     examNormal(exam, passed) {
       return exam > 0 && exam <= 100 || !passed;
     },

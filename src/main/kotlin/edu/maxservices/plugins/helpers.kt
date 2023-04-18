@@ -1,10 +1,57 @@
 package edu.maxservices.plugins
 import edu.maxservices.models.*
+import kotlinx.serialization.Serializable
 import java.sql.Array
 import java.sql.Connection
 import java.sql.ResultSet
 
+@Serializable
+data class courseFull(
+    val name: String,
+    val uName: String,
+    val prevMinScore: Int,
+    val budgetPlaces: Int,
+    val commercePlaces: Int,
+    val planet: String,
+    val city: String,
+) {}
+
 class Helpers {
+
+    inner class Check {
+        fun loginCheck(auth: Auth) : Boolean {
+            if (authAllowedSymbols(auth)) return true
+            else throw Exception("Symbols are not allowed")
+        }
+        fun registrationCheck(auth: Auth) : Boolean {
+            return authAllowedSymbols(auth) && passwordStrength(auth.password)
+        }
+        fun passwordStrength(password: String) : Boolean {
+            return password.length >= 6
+        }
+        fun authAllowedSymbols(auth: Auth) : Boolean {
+            return  allowedSymbols(auth.login) &&
+                    allowedSymbols(auth.password) &&
+                    allowedSymbols(auth.name, true) &&
+                    (auth.role in 0..2)
+        }
+        fun allowedSymbols(str: String, spaceAllowed : Boolean = false) : Boolean {
+            str.forEach {
+                if(!it.isLetterOrDigit()) {
+                    if (!spaceAllowed || it != ' ') return false
+                }
+            }
+            return true
+        }
+        fun examsCheck(scores: HashMap<Exams, Int>) : Boolean {
+            for ((key, value) in scores) {
+                if (value > 100 || value < 0) {
+                    return false
+                }
+            }
+            return true
+        }
+    }
     inner class Convert {
         fun resulSetArrayToMutableInt(resSet: ResultSet, columnLabel: String) : MutableList<Int> {
             val arrRSet = resSet.getArray(columnLabel).resultSet
@@ -93,6 +140,18 @@ class Helpers {
     }
 
     inner class Parse {
+        fun resultSetToCourseStudentList(resSet: ResultSet) : List<CoursesToStudents> {
+            val res = mutableListOf<CoursesToStudents>()
+            while(resSet.next()) {
+                val crsStd = CoursesToStudents (
+                    resSet.getInt("course_id"),
+                    resSet.getInt("student_id"),
+                    resSet.getInt("student_score")
+                )
+                res.add(crsStd)
+            }
+            return res
+        }
         fun resultSetToStudentList(resSet: ResultSet) : List<Student> {
             val res = mutableListOf<Student>()
             while(resSet.next()) {

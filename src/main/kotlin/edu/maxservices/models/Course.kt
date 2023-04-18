@@ -65,6 +65,7 @@ class CourseManager(private val conn : Connection) {
     private val FindApplicants = "SELECT * FROM courses_to_students WHERE course_id = ? ORDER BY student_score"
     private val NewApplicant = "INSERT INTO courses_to_students (course_id, student_id, student_score)" +
             "VALUES (?, ?, ?)"
+    private val GetUniversity = "SELECT * FROM universities WHERE ? = ANY(coursesids)"
     init {
         createTables()
     }
@@ -74,6 +75,8 @@ class CourseManager(private val conn : Connection) {
         statement.execute(TableCreate)
         statement.execute(CoursesToStudentsTableCreate)
     }
+
+
 
     fun getAll() : List<Course> {
         val statement = conn.createStatement()
@@ -142,5 +145,16 @@ class CourseManager(private val conn : Connection) {
         statement.setInt(2, student.id())
         statement.setInt(3, student.getScore(course.requiredExams()))
         statement.execute()
+    }
+
+    fun getUniversity(id: Int) : University {
+        val statement = conn.prepareStatement(GetUniversity)
+        statement.setInt(1, id)
+        statement.execute()
+        val resSet = statement.resultSet
+
+        val res = Helpers().Parse().resultSetToUniversity(resSet, conn )
+        if (res != null) return res
+        else throw Exception("(CourseManager.getUniversity) No university found.")
     }
 }
