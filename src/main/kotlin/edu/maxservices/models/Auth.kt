@@ -1,7 +1,9 @@
 package edu.maxservices.models
 
+import edu.maxservices.plugins.LogsManager
 import kotlinx.serialization.Serializable
 import java.sql.Connection
+import java.util.logging.Logger
 
 @Serializable
 class Auth (
@@ -14,7 +16,10 @@ class Auth (
 class AuthManager(private val conn : Connection) {
     private val loginStudent = "SELECT id FROM students WHERE login = ? AND password = ?"
     private val loginUniversity = "SELECT id FROM universities WHERE login = ? AND password = ?"
-
+    private val logger = LogsManager(this.javaClass.name)
+    init {
+        logger.log("Initialized Auth Manager")
+    }
     fun login(auth: Auth) : Int {
         var id: Int = 0;
         when (auth.role) {
@@ -25,6 +30,7 @@ class AuthManager(private val conn : Connection) {
                 statement.setString(2, auth.password)
                 statement.execute()
                 val resSet = statement.resultSet ?: throw Exception("Student not found")
+
                 resSet.next()
                 id = resSet.getInt("id")
                 return id

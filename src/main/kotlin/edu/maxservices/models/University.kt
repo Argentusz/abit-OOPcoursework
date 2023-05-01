@@ -10,10 +10,18 @@ data class University (
     override val name: String,
     override val login: String,
     override val password: String,
-    private val courses: List<Course>
+    private val courses: List<Course>,
+    private val planet: String,
+    private val city: String,
 ) : User() {
     fun getCourses(): List<Course> {
         return courses
+    }
+    fun planet(): String {
+        return planet
+    }
+    fun city(): String {
+        return city
     }
 }
 
@@ -24,13 +32,15 @@ class UniversityManager(private val conn : Connection) {
                 "    name TEXT NOT NULL DEFAULT ''," +
                 "    login TEXT NOT NULL DEFAULT ''," +
                 "    password TEXT NOT NULL DEFAULT ''," +
-                "    coursesIds INTEGER[] DEFAULT array[]::integer[]" +
+                "    coursesIds INTEGER[] DEFAULT array[]::integer[]," +
+                "    planet TEXT NOT NULL DEFAULT ''," +
+                "    city TEXT NOT NULL DEFAULT ''" +
                 ");"
     private val SelectById = "SELECT * FROM universities WHERE id = ?"
     private val SelectAll = "SELECT * FROM universities;"
-    private val Insert = "INSERT INTO universities (name, login, password, coursesIds)" +
-            "VALUES (?, ?, ?, ?) RETURNING id;"
-    private val Update = "UPDATE universities SET name = ?, login = ?, password = ?, coursesIds = ?" +
+    private val Insert = "INSERT INTO universities (name, login, password, coursesIds, planet, city)" +
+            "VALUES (?, ?, ?, ?, ?, ?) RETURNING id;"
+    private val Update = "UPDATE universities SET name = ?, login = ?, password = ?, coursesIds = ?, planet = ?, city = ?" +
             " WHERE id = ? RETURNING id"
     private val DeleteById = "DELETE FROM universities WHERE id = ? RETURNING id"
 

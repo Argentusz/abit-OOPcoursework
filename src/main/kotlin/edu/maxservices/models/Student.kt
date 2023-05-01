@@ -30,7 +30,6 @@ data class Student (
 data class CoursesToStudents(
     val courseId: Int,
     val studentId: Int,
-    val studentScore: Int,
 )
 
 class StudentManager(private val conn : Connection) {
@@ -49,13 +48,13 @@ class StudentManager(private val conn : Connection) {
     private val Update = "UPDATE students SET name = ?, login = ?, password = ?, exams = ?" +
             " WHERE id = ?"
     private val DeleteById = "DELETE FROM students WHERE id = ? RETURNING id"
-    private val FindApplies = "SELECT * FROM courses_to_students WHERE student_id = ? ORDER BY student_score"
-    private val NewApplicant = "INSERT INTO courses_to_students (course_id, student_id, student_score)" +
-            "VALUES (?, ?, ?)"
+    private val FindApplies = "SELECT * FROM courses_to_students WHERE student_id = ?"
+    private val NewApplicant = "INSERT INTO courses_to_students (course_id, student_id)" +
+            "VALUES (?, ?)"
+    private val DeleteApply = "DELETE FROM courses_to_students WHERE student_id = ? AND course_id = ? RETURNING student_id"
     init {
         createTable()
     }
-// TODO: Change applies to courses_to_students
     fun createTable() {
         val statement = conn.createStatement()
         statement.execute(TableCreate)
@@ -112,25 +111,43 @@ class StudentManager(private val conn : Connection) {
         else throw Exception("(StudentManager.deleteById) No student with id = $id found.")
     }
 
+    fun unApply(studentId: Int, courseId: Int) : Int {
+        val statement = conn.prepareStatement(DeleteApply)
+        statement.setInt(1, studentId)
+        statement.setInt(2, courseId)
+        statement.execute()
+        val resSet = statement.resultSet
+        if (resSet.next()) return resSet.getInt("student_id")
+        else throw Exception("(StudentManager.unApply) No match student=$studentId course=$courseId found.")
+
+    }
+
     fun findApplies(id: Int) : List<courseFull> {
+
         val statement = conn.prepareStatement(FindApplies)
         statement.setInt(1, id)
         statement.execute()
         val resSet = statement.resultSet
+
         val crsStd = Helpers().Parse().resultSetToCourseStudentList(resSet)
+
+
         val res = mutableListOf<courseFull>()
         crsStd.forEach {
+
             val course = CourseManager(conn).getById(it.courseId)
+
             val university = CourseManager(conn).getUniversity(it.courseId)
+
             val resItem = courseFull(
+                id = course.id(),
                 name = course.name(),
                 uName = university.name(),
                 prevMinScore = course.prevMinScore(),
                 budgetPlaces = course.budgetPlaces(),
                 commercePlaces = course.commercePlaces(),
-                // TODO !!!!
-                planet = "Земля",
-                city = "Санкт-Петербург",
+                planet = university.planet(),
+                city = university.city(),
             )
             res.add(resItem)
         }

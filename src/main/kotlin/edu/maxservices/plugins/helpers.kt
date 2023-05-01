@@ -7,6 +7,7 @@ import java.sql.ResultSet
 
 @Serializable
 data class courseFull(
+    val id: Int,
     val name: String,
     val uName: String,
     val prevMinScore: Int,
@@ -68,9 +69,7 @@ class Helpers {
             var i = 0
             while (arrRSet.next()) {
                 val value = arrRSet.getInt(2)
-                if (value != 0) {
-                    res[Exams.values()[i]] = value
-                }
+                res[Exams.values()[i]] = value
                 i++
             }
             return res
@@ -100,6 +99,8 @@ class Helpers {
         fun mListToIntArraySQL(conn: Connection, mList: MutableList<Int>) : Array {
             return conn.createArrayOf("integer", mList.toTypedArray())
         }
+
+
 
         fun examsListToIntArraySQL(list: List<Exams>, conn: Connection) : Array {
             val numList = mutableListOf<Int>()
@@ -145,8 +146,7 @@ class Helpers {
             while(resSet.next()) {
                 val crsStd = CoursesToStudents (
                     resSet.getInt("course_id"),
-                    resSet.getInt("student_id"),
-                    resSet.getInt("student_score")
+                    resSet.getInt("student_id")
                 )
                 res.add(crsStd)
             }
@@ -181,19 +181,31 @@ class Helpers {
             }
             return res
         }
+        fun resultSetArrayOfCourseIdsToCourseList(resSet: ResultSet, conn: Connection) : List<Course> {
+            val res = mutableListOf<Course>()
+            val courseManager = CourseManager(conn)
+            while (resSet.next()) {
+                val id = resSet.getInt(2)
+                val course = courseManager.getById(id)
+                res.add(course)
+            }
+            return res
+        }
 
         fun resultSetToUniversityList(resSet: ResultSet, conn: Connection) : List<University> {
             val res = mutableListOf<University>()
             while(resSet.next()) {
                 Helpers().Convert().resulSetArrayToMutableInt(resSet, "coursesIds")
                 res.add(
-                    University(
-                    resSet.getInt("id"),
-                    resSet.getString("name"),
-                    resSet.getString("login"),
-                    resSet.getString("password"),
-                    Helpers().Parse().resultSetToCourseList(resSet, conn)
-                )
+                    University (
+                        resSet.getInt("id"),
+                        resSet.getString("name"),
+                        resSet.getString("login"),
+                        resSet.getString("password"),
+                        Helpers().Parse().resultSetToCourseList(resSet, conn),
+                        resSet.getString("planet"),
+                        resSet.getString("city"),
+                    )
                 )
             }
             return res
@@ -242,12 +254,14 @@ class Helpers {
 
         fun resultSetToUniversity(resSet: ResultSet, conn: Connection) : University? {
             return if (resSet.next()) {
-                University(
+                University (
                     resSet.getInt("id"),
                     resSet.getString("name"),
                     resSet.getString("login"),
                     resSet.getString("password"),
-                    Helpers().Parse().resultSetToCourseList(resSet, conn)
+                    Helpers().Parse().resultSetArrayOfCourseIdsToCourseList(resSet.getArray("coursesIds").resultSet, conn),
+                    resSet.getString("planet"),
+                    resSet.getString("city"),
                 )
             } else {
                 null

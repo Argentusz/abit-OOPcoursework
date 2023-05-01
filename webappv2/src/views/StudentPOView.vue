@@ -60,7 +60,7 @@
 
   <div>
     <div class="table-btns">
-      <b-dropdown variant="warning" right dropup>
+      <b-dropdown variant="warning" right dropup >
         <template #button-content>
           <img height="30px" class="table-btn" :src="require('@/assets/download.svg')">
         </template>
@@ -75,6 +75,13 @@
           PDF
         </b-dropdown-item-button>
       </b-dropdown>
+
+      <b-button
+        variant="danger"
+        @click="deleteCourse()"
+      >
+        <b-icon-trash />
+      </b-button>
     </div>
     <div>
     <ag-grid-vue
@@ -82,6 +89,9 @@
         class="ag-theme-balham-dark"
         :columnDefs="columns"
         :rowData="rows"
+        :rowSelection="rowSelection"
+        @selection-changed="onSelectionChanged()"
+        @grid-ready="onGridReady"
     >
     </ag-grid-vue>
     </div>
@@ -125,20 +135,32 @@
     </div>
     <div class="change px-2 py-2" id="name">
       {{$t('fullName')}}: {{studentData.name}}
-      <b-form-input :placeholder="$t('newFullName')"/>
+      <b-form-input v-model="newName" :placeholder="$t('newFullName')"/>
     </div>
-    <b-button variant="success" class="mx-2">{{$t('save')}}<b-icon-check/></b-button>
+    <b-button
+        variant="success"
+        class="mx-2"
+        @click="updateName()"
+    >{{$t('save')}}<b-icon-check/></b-button>
     <div class="change px-2 py-2" id="name">
       {{$t('login')}}: {{studentData.login}}
-      <b-form-input :placeholder="$t('newLogin')"/>
+      <b-form-input v-model="newLogin" :placeholder="$t('newLogin')"/>
     </div>
-    <b-button variant="success" class="mx-2">{{$t('save')}}<b-icon-check/></b-button>
+    <b-button
+        variant="success"
+        class="mx-2"
+        @click="updateLogin()"
+    >{{$t('save')}}<b-icon-check/></b-button>
     <div class="change px-2 py-2" id="password">
       {{$t('password')}}
-      <b-form-input :placeholder="$t('oldPassword')"/>
-      <b-form-input class="my-3" :placeholder="$t('newPassword')"/>
+      <b-form-input v-model="oldPassword" :placeholder="$t('oldPassword')"/>
+      <b-form-input v-model="newPassword" class="my-3" :placeholder="$t('newPassword')"/>
     </div>
-    <b-button variant="success" class="mx-2">{{$t('save')}}<b-icon-check/></b-button>
+    <b-button
+        variant="success"
+        class="mx-2"
+        @click="updatePassword()"
+    >{{$t('save')}}<b-icon-check/></b-button>
   </b-sidebar>
 </div>
 </template>
@@ -146,6 +168,7 @@
 <script>
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
+import deleteBtn from "@/components/deleteBtn.vue"
 import { AgGridVue } from "ag-grid-vue";
 import jsPDF from "jspdf";
 import consts from "@/helpers/consts"
@@ -155,14 +178,22 @@ export default {
   name: "StudentPOView",
   components: {
     AgGridVue,
+    deleteBtn,
   },
   data() {
     return {
+      selectedRow: '',
+      newLogin: '',
+      oldPassword: '',
+      newPassword: '',
+      newName: '',
       studentData: {
         id: 1,
-        login: 'argentusz',
-        name: 'Grzegorz Brzęczyszczykiewicz',
+        login: '',
+        name: '',
         exams: [90, 90, 0, 0, 90, 100, 0],
+        scores: {},
+        password: '',
       },
       columns: [
         {
@@ -204,22 +235,80 @@ export default {
       rows: null
     }
   },
+  created() {
+    this.rowSelection = 'single';
+  },
   beforeMount() {
     const id = localStorage.getItem('uid')
     if (id == null) {
       this.$router.push('/signin')
     }
-    this.$http.get(url + "/api/" + consts.apiV + "/students/to_courses/" + id).then(
-      response=>{
-        console.log(response)
-        this.rows = response.data
-      }
+    this.$http.get(url + "/api/" + consts.apiV + "/students/" + id).then(
+        response=> {
+          console.log(response)
+          this.studentData.name = response.data.name
+          this.studentData.exams[0] = response.data.scores.Russian
+          this.studentData.exams[1] = response.data.scores.Math
+          this.studentData.exams[2] = response.data.scores.Ingirmanlandian
+          this.studentData.exams[3] = response.data.scores.English
+          this.studentData.exams[4] = response.data.scores.IT
+          this.studentData.exams[5] = response.data.scores.Physics
+          this.studentData.exams[6] = response.data.scores.Literature
+          this.studentData.scores = response.data.scores
+          this.studentData.login = response.data.login
+          this.studentData.password = response.data.password
+        }
     )
+    this.updateRows(id)
   },
   methods: {
+    updateRows(id) {
+      this.$http.get(url + "/api/" + consts.apiV + "/students/to_courses/" + id).then(
+          response=>{
+            console.log(response)
+            this.rows = response.data
+          }
+      )
+    },
+    updateName() {
+      this.$http.patch(url + "/api/" + consts.apiV + "/students",
+          {id: this.studentData.id,
+            login: this.studentData.login,
+            name: this.newName,
+            password: this.studentData.password,
+            scores: this.studentData.scores}
+      )
+      this.$router.go()
+    },
+    updateLogin() {
+      this.$http.patch(url + "/api/" + consts.apiV + "/students",
+          {id: this.studentData.id,
+            login: this.newLogin,
+            name: this.studentData.name,
+            password: this.studentData.password,
+            scores: this.studentData.scores}
+      )
+      this.$router.go()
+    },
+    updatePassword() {
+
+    },
     exit() {
       localStorage.clear()
       this.$router.go()
+    },
+    onSelectionChanged() {
+      const selectedRows = this.gridApi.getSelectedRows();
+      this.selectedRow = selectedRows[0].id;
+    },
+    onGridReady(params) {
+      this.gridApi = params.api;
+      this.gridColumnApi = params.columnApi;
+    },
+    deleteCourse() {
+      console.log('Delete ' + this.selectedRow + ' ' + this.studentData.id)
+      this.$http.delete(url + "/api/" + consts.apiV + "/students/to_courses/" + this.studentData.id + "/" + this.selectedRow)
+      this.updateRows(this.studentData.id)
     },
     makeInitials() {
       const arrayName = this.studentData.name.split(" ", 2)

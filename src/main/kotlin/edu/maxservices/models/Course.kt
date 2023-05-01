@@ -52,8 +52,7 @@ class CourseManager(private val conn : Connection) {
     private val CoursesToStudentsTableCreate =
         "CREATE TABLE IF NOT EXISTS courses_to_students (" +
                 "    course_id INTEGER REFERENCES courses(id)," +
-                "    student_id INTEGER REFERENCES students(id)," +
-                "    student_score INTEGER NOT NULL DEFAULT 0" +
+                "    student_id INTEGER REFERENCES students(id)" +
                 ");"
     private val SelectById = "SELECT * FROM courses WHERE id = ?"
     private val SelectAll = "SELECT * FROM courses;"
@@ -62,8 +61,8 @@ class CourseManager(private val conn : Connection) {
     private val Update = "UPDATE courses SET name = ?, description = ?, prevMinScore = ?, budgetPlaces = ?, commercePlaces = ?, requiredExams = ?" +
             " WHERE id = ?"
     private val DeleteById = "DELETE FROM courses WHERE id = ? RETURNING id"
-    private val FindApplicants = "SELECT * FROM courses_to_students WHERE course_id = ? ORDER BY student_score"
-    private val NewApplicant = "INSERT INTO courses_to_students (course_id, student_id, student_score)" +
+    private val FindApplicants = "SELECT * FROM courses_to_students WHERE course_id = ?"
+    private val NewApplicant = "INSERT INTO courses_to_students (course_id, student_id)" +
             "VALUES (?, ?, ?)"
     private val GetUniversity = "SELECT * FROM universities WHERE ? = ANY(coursesids)"
     init {
@@ -152,7 +151,6 @@ class CourseManager(private val conn : Connection) {
         statement.setInt(1, id)
         statement.execute()
         val resSet = statement.resultSet
-
         val res = Helpers().Parse().resultSetToUniversity(resSet, conn )
         if (res != null) return res
         else throw Exception("(CourseManager.getUniversity) No university found.")
