@@ -84,6 +84,7 @@ const msg = {
         dontHaveAcc: 'Нет аккаунта',
         alreadyHaveAcc: 'Уже есть аккаунт',
         back: 'Назад',
+        applyToUn: 'Подать заявление'
     },
     en: {
         signIn: 'Sign In',
@@ -165,6 +166,7 @@ const msg = {
         dontHaveAcc: 'Don`t have an account',
         alreadyHaveAcc: 'Already have an account',
         back: 'Return',
+        applyToUn: 'Apply',
     },
     pl: {
         signIn: 'Zalogować się',
@@ -246,6 +248,7 @@ const msg = {
         dontHaveAcc: 'Nie masz konta',
         alreadyHaveAcc: 'Już masz konto',
         back: 'Powrót',
+        applyToUn: 'Aplikować',
     },
     ing: {
         signIn: 'Kirjaudu sisään',
@@ -327,6 +330,7 @@ const msg = {
         dontHaveAcc: 'Eikö sinulla ole tiliä',
         alreadyHaveAcc: 'Onko sinulla jo tili',
         back: 'Palata',
+        applyToUn: 'hakea',
     }
 }
 let lcl = localStorage.getItem('lang')

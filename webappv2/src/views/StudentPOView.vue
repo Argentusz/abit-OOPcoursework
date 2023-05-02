@@ -140,6 +140,7 @@
       <b-form-input v-model="newName" :placeholder="$t('newFullName')"/>
     </div>
     <b-button
+        type="button"
         variant="success"
         class="mx-2"
         @click="updateName()"
@@ -149,16 +150,19 @@
       <b-form-input v-model="newLogin" :placeholder="$t('newLogin')"/>
     </div>
     <b-button
+        type="button"
         variant="success"
         class="mx-2"
         @click="updateLogin()"
     >{{$t('save')}}<b-icon-check/></b-button>
     <div class="change px-2 py-2" id="password">
       {{$t('password')}}
-      <b-form-input v-model="oldPassword" :state="goodOldPassword" :placeholder="$t('oldPassword')"/>
+      <b-form-input v-model="oldPassword" :placeholder="$t('oldPassword')"/>
       <b-form-input v-model="newPassword" :state="newPasswordStrong" class="my-3" :placeholder="$t('newPassword')"/>
+      <b-alert variant="danger" :show="wrongAuth">{{$t('error')}}</b-alert>
     </div>
     <b-button
+        type="button"
         variant="success"
         class="mx-2"
         @click="updatePassword()"
@@ -170,7 +174,6 @@
 <script>
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
-import deleteBtn from "@/components/deleteBtn.vue"
 import { AgGridVue } from "ag-grid-vue";
 import jsPDF from "jspdf";
 import consts from "@/helpers/consts"
@@ -179,8 +182,7 @@ import {url} from "@/main";
 export default {
   name: "StudentPOView",
   components: {
-    AgGridVue,
-    deleteBtn,
+    AgGridVue
   },
   data() {
     return {
@@ -189,6 +191,7 @@ export default {
       oldPassword: '',
       newPassword: '',
       newName: '',
+      wrongAuth: false,
       goodOldPassword: true,
       newPasswordStrong: true,
       studentData: {
@@ -296,12 +299,20 @@ export default {
     },
     updatePassword() {
       if (!this.passwordStrong(this.newPassword) || !this.allowedSymbols(this.newPassword)) {
+        console.log(this.newPassword)
+        console.log(this.passwordStrong(this.newPassword))
+        console.log(this.allowedSymbols(this.newPassword))
         this.newPasswordStrong = false
         return
+      } else {
+        this.newPasswordStrong = true
       }
+      this.goodOldPassword = false
+      this.wrongAuth = true
       this.$http.patch(url + "/api/v1/auth",
           {login: this.studentData.login, password: this.oldPassword, role: 1, name: ""}).then(
           response=>{
+            this.wrongAuth = false
             this.$http.patch(url + "/api/" + consts.apiV + "/students",
                 {id: this.studentData.id,
                   login: this.studentData.login,
@@ -311,7 +322,7 @@ export default {
             )
             this.$router.go()
           })
-      this.goodOldPassword = false
+
     },
     allowedSymbols(str, spacesAllowed = false) {
       if (spacesAllowed) {
@@ -321,7 +332,7 @@ export default {
       }
     },
     passwordStrong(str) {
-      return str >= 6
+      return str.length >= 6
     },
     exit() {
       localStorage.clear()
