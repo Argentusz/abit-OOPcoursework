@@ -1,8 +1,10 @@
 package edu.maxservices.routes
 
 import edu.maxservices.apiV
+import edu.maxservices.models.Auth
 import edu.maxservices.models.Student
 import edu.maxservices.models.StudentManager
+import edu.maxservices.plugins.Helpers
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -63,7 +65,18 @@ fun Route.studentApi(studentManager: StudentManager) {
                 }
                 patch() {
                     val student = call.receive<Student>()
-                    call.respond(studentManager.change(student))
+                    if (Helpers().Check().registrationCheck(
+                        Auth(
+                            login = student.login,
+                            password = student.password,
+                            name = "",
+                            role = 1,
+                        )
+                    )) {
+                        call.respond(studentManager.change(student))
+                    } else {
+                        call.respond(HttpStatusCode.BadRequest)
+                    }
                 }
                 delete("{id?}") {
                     val id = call.parameters["id"]

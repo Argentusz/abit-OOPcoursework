@@ -79,9 +79,11 @@
       <b-button
         variant="danger"
         @click="deleteCourse()"
+        class="ml-2"
       >
         <b-icon-trash />
       </b-button>
+
     </div>
     <div>
     <ag-grid-vue
@@ -153,8 +155,8 @@
     >{{$t('save')}}<b-icon-check/></b-button>
     <div class="change px-2 py-2" id="password">
       {{$t('password')}}
-      <b-form-input v-model="oldPassword" :placeholder="$t('oldPassword')"/>
-      <b-form-input v-model="newPassword" class="my-3" :placeholder="$t('newPassword')"/>
+      <b-form-input v-model="oldPassword" :state="goodOldPassword" :placeholder="$t('oldPassword')"/>
+      <b-form-input v-model="newPassword" :state="newPasswordStrong" class="my-3" :placeholder="$t('newPassword')"/>
     </div>
     <b-button
         variant="success"
@@ -187,6 +189,8 @@ export default {
       oldPassword: '',
       newPassword: '',
       newName: '',
+      goodOldPassword: true,
+      newPasswordStrong: true,
       studentData: {
         id: 1,
         login: '',
@@ -291,7 +295,33 @@ export default {
       this.$router.go()
     },
     updatePassword() {
-
+      if (!this.passwordStrong(this.newPassword) || !this.allowedSymbols(this.newPassword)) {
+        this.newPasswordStrong = false
+        return
+      }
+      this.$http.patch(url + "/api/v1/auth",
+          {login: this.studentData.login, password: this.oldPassword, role: 1, name: ""}).then(
+          response=>{
+            this.$http.patch(url + "/api/" + consts.apiV + "/students",
+                {id: this.studentData.id,
+                  login: this.studentData.login,
+                  name: this.studentData.name,
+                  password: this.newPassword,
+                  scores: this.studentData.scores}
+            )
+            this.$router.go()
+          })
+      this.goodOldPassword = false
+    },
+    allowedSymbols(str, spacesAllowed = false) {
+      if (spacesAllowed) {
+        return /^[a-zA-Z0-9 ]+$/.test(str);
+      } else {
+        return /^[a-zA-Z0-9]+$/.test(str);
+      }
+    },
+    passwordStrong(str) {
+      return str >= 6
     },
     exit() {
       localStorage.clear()
@@ -307,8 +337,8 @@ export default {
     },
     deleteCourse() {
       console.log('Delete ' + this.selectedRow + ' ' + this.studentData.id)
-      this.$http.delete(url + "/api/" + consts.apiV + "/students/to_courses/" + this.studentData.id + "/" + this.selectedRow)
-      this.updateRows(this.studentData.id)
+      this.$http.delete(url + "/api/" + consts.apiV + "/students/to_courses/" + this.studentData.id + "/" + this.selectedRow).then(response=>{this.updateRows(this.studentData.id)})
+
     },
     makeInitials() {
       const arrayName = this.studentData.name.split(" ", 2)
