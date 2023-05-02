@@ -1,6 +1,7 @@
 package edu.maxservices.models
 
 import edu.maxservices.plugins.Helpers
+import edu.maxservices.plugins.LogsManager
 import edu.maxservices.plugins.courseFull
 import kotlinx.serialization.Serializable
 import java.sql.Connection
@@ -52,8 +53,12 @@ class StudentManager(private val conn : Connection) {
     private val NewApplicant = "INSERT INTO courses_to_students (course_id, student_id)" +
             "VALUES (?, ?)"
     private val DeleteApply = "DELETE FROM courses_to_students WHERE student_id = ? AND course_id = ? RETURNING student_id"
+
+    private val logger = LogsManager(this.javaClass.name)
+
     init {
         createTable()
+        logger.log("Initialized Student Manager")
     }
     fun createTable() {
         val statement = conn.createStatement()

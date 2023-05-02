@@ -1,6 +1,7 @@
 package edu.maxservices.models
 
 import edu.maxservices.plugins.Helpers
+import edu.maxservices.plugins.LogsManager
 import kotlinx.serialization.Serializable
 import java.sql.Connection
 
@@ -65,8 +66,12 @@ class CourseManager(private val conn : Connection) {
     private val NewApplicant = "INSERT INTO courses_to_students (course_id, student_id)" +
             "VALUES (?, ?, ?)"
     private val GetUniversity = "SELECT * FROM universities WHERE ? = ANY(coursesids)"
+
+    private val logger = LogsManager(this.javaClass.name)
+
     init {
         createTables()
+        logger.log("Initialized Course Manager")
     }
 
     fun createTables() {

@@ -1,6 +1,7 @@
 package edu.maxservices.models
 
 import edu.maxservices.plugins.Helpers
+import edu.maxservices.plugins.LogsManager
 import kotlinx.serialization.Serializable
 import java.sql.Connection
 
@@ -44,8 +45,12 @@ class UniversityManager(private val conn : Connection) {
             " WHERE id = ? RETURNING id"
     private val DeleteById = "DELETE FROM universities WHERE id = ? RETURNING id"
 
+    private val logger = LogsManager(this.javaClass.name)
+
+
     init {
         createTable()
+        logger.log("Initialized University Manager")
     }
 
     fun createTable() {

@@ -5,6 +5,7 @@ import edu.maxservices.models.Auth
 import edu.maxservices.models.Student
 import edu.maxservices.models.StudentManager
 import edu.maxservices.plugins.Helpers
+import edu.maxservices.plugins.LogsManager
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -12,6 +13,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.studentApi(studentManager: StudentManager) {
+    val logger = LogsManager(this.javaClass.name)
+
     route("/api") {
         route("/v$apiV") {
             route("students") {
@@ -26,7 +29,7 @@ fun Route.studentApi(studentManager: StudentManager) {
                                 call.respond(studentManager.findApplies(id.toInt()))
 
                             } catch(e: Exception) {
-                                println("THIS EX: $e")
+                                logger.log("Exception students/to_courses: $e")
                                 call.respond(HttpStatusCode.BadRequest)
                             }
                         }
