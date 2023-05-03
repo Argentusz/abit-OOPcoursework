@@ -86,6 +86,9 @@ const msg = {
         back: 'Назад',
         applyToUn: 'Подать заявление',
         showCourses: 'Показать курсы',
+        alreadyApplied: 'Вы уже подали заявку на этот курс',
+        success: 'Успешно',
+        successApply: 'Вы успешно подали заявку на этот курс',
     },
     en: {
         signIn: 'Sign In',
@@ -169,6 +172,10 @@ const msg = {
         back: 'Return',
         applyToUn: 'Apply',
         showCourses: 'Show courses',
+        alreadyApplied: 'You have already applied to this course',
+        success: 'Success',
+        successApply: 'You have successfully applied to this course',
+
     },
     pl: {
         signIn: 'Zalogować się',
@@ -252,6 +259,10 @@ const msg = {
         back: 'Powrót',
         applyToUn: 'Aplikować',
         showCourses: 'Pokaż kursy',
+        alreadyApplied: 'Już zaaplikowałeś do tego kursa',
+        success: 'Sukces',
+        successApply: 'Zgłosiłeś się na ten kurs',
+
     },
     ing: {
         signIn: 'Kirjaudu sisään',
@@ -335,6 +346,10 @@ const msg = {
         back: 'Palata',
         applyToUn: 'hakea',
         showCourses: 'Näytä kursseja',
+        alreadyApplied: 'Olet jo hakenut tälle kurssille',
+        success: 'Menestys',
+        successApply: 'Olet hakenut tälle kurssille',
+
     }
 }
 let lcl = localStorage.getItem('lang')

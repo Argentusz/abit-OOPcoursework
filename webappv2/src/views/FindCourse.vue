@@ -116,7 +116,26 @@ export default {
   methods: {
     goApply() {
       const courseId = this.selectedRow
-      this.$http.post(url + "/api/" + consts.apiV + "/students/to_courses/" + this.studentId + '/' + courseId,
+      this.$http.post(url + "/api/" + consts.apiV + "/students/to_courses/" + this.studentId + '/' + courseId).then(
+          response=>{
+            this.$bvToast.toast(this.$t('successApply'),
+                {
+                  title: this.$t('success'),
+                  variant: 'success',
+                  solid: true,
+                  toaster: 'b-toaster-bottom-right'
+                }
+            )
+          }, err => {
+            this.$bvToast.toast(this.$t('alreadyApplied'),
+                {
+                  title: this.$t('error'),
+                  variant: 'danger',
+                  solid: true,
+                  toaster: 'b-toaster-bottom-right'
+                }
+            )
+          }
       )
     },
     onSelectionChanged() {
@@ -228,5 +247,6 @@ export default {
   --ag-odd-row-background-color: #343a40;
   --ag-header-background-color: #ffc107;
   --ag-header-foreground-color: #343a40;
+  --ag-secondary-foreground-color: #343a40;
 }
 </style>

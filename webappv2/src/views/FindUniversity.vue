@@ -27,7 +27,7 @@
             class="table-btn"
             variant="warning"
             v-if="showCourseTable === true"
-            @click="">
+            @click="goApply()">
           <b-icon-plus/>{{$t('applyToUn')}}
         </b-button>
       </div>
@@ -104,17 +104,18 @@ export default {
           field: "prevMinScore",
           headerName: this.$t('prevMinScore'),
           filter: 'agNumberColumnFilter',
+          width: 200,
         },
         {
           field: "budgetPlaces",
           headerName: this.$t('budgetPlaces'),
-          width: 170,
+          width: 200,
           filter: 'agNumberColumnFilter',
         },
         {
           field: "commercePlaces",
           headerName: this.$t('commercePlaces'),
-          width: 170,
+          width: 200,
           filter: 'agNumberColumnFilter',
         },
       ],
@@ -123,6 +124,7 @@ export default {
       courseRows: null,
       localeText: null,
       rowSelection: 'single',
+      courseIdSelected: null,
       studentId: null,
       modalShow: false,
       showCourseTable: false,
@@ -146,21 +148,52 @@ export default {
         })
   },
   methods: {
+    goApply() {
+      this.$http.post(url + "/api/" + consts.apiV + "/students/to_courses/" + this.studentId + '/' + this.courseIdSelected).then(
+          response=>{
+            this.$bvToast.toast(this.$t('successApply'),
+                {
+                  title: this.$t('success'),
+                  variant: 'success',
+                  solid: true,
+                  toaster: 'b-toaster-bottom-right'
+                }
+            )
+          }, err => {
+            this.$bvToast.toast(this.$t('alreadyApplied'),
+                {
+                  title: this.$t('error'),
+                  variant: 'danger',
+                  solid: true,
+                  toaster: 'b-toaster-bottom-right'
+                }
+            )
+          }
+      )
+    },
     ableToExpand() {
       return this.selectedRow !== null
     },
     expand() {
+      const selectedRows = this.gridApi.getSelectedRows();
+      this.courseRows = selectedRows[0].courses;
       if (this.selectedRow !== null) {
         this.showCourseTable = true;
       }
+
     },
     collapse() {
       this.showCourseTable = false;
       this.selectedRow = null;
+      this.courseIdSelected = null;
     },
     onSelectionChanged() {
       const selectedRows = this.gridApi.getSelectedRows();
       this.selectedRow = selectedRows[0].id;
+    },
+    onCourseSelectionChanged() {
+      const selectedRows = this.gridApi.getSelectedRows();
+      this.courseIdSelected = selectedRows[0].id;
     },
     onGridReady(params) {
       this.gridApi = params.api;
@@ -250,7 +283,7 @@ export default {
   --ag-odd-row-background-color: #343a40;
   --ag-header-background-color: #ffc107;
   --ag-header-foreground-color: #343a40;
-
+  --ag-secondary-foreground-color: #343a40;
 
   width: 60%;
   height: 60vh;
