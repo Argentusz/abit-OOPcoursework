@@ -21,6 +21,7 @@
             :rowSelection="rowSelection"
             @selection-changed="onSelectionChanged()"
             @grid-ready="onGridReady"
+            :localeText="localeText"
         >
         </ag-grid-vue>
       </div>
@@ -32,6 +33,10 @@
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 import { AgGridVue } from "ag-grid-vue";
+import AG_GRID_LOCALE_EN from "@/helpers/aggrid-en";
+import AG_GRID_LOCALE_RU from "@/helpers/aggrid-ru";
+import AG_GRID_LOCALE_IG from "@/helpers/aggrid-ig";
+import AG_GRID_LOCALE_PL from "@/helpers/aggrid-pl";
 
 export default {
   name: "FindCourse",
@@ -41,9 +46,13 @@ export default {
   created() {
     this.rowSelection = 'single';
   },
+  beforeMount() {
+    this.setAGGridLocale(localStorage.getItem('lang'))
+  },
   data() {
     return {
       selectedRow: '',
+      localeText: null,
       columns: [
         {
           field: "name",
@@ -100,6 +109,22 @@ export default {
     onGridReady(params) {
       this.gridApi = params.api;
       this.gridColumnApi = params.columnApi;
+    },
+    setAGGridLocale(lcl) {
+      switch (lcl) {
+        case 'en':
+          this.localeText = AG_GRID_LOCALE_EN;
+          break;
+        case 'ru':
+          this.localeText = AG_GRID_LOCALE_RU;
+          break;
+        case 'ing':
+          this.localeText = AG_GRID_LOCALE_IG;
+          break;
+        case 'pl':
+          this.localeText = AG_GRID_LOCALE_PL;
+          break;
+      }
     },
   },
 }

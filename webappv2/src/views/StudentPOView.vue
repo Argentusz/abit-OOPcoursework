@@ -94,6 +94,7 @@
         :rowSelection="rowSelection"
         @selection-changed="onSelectionChanged()"
         @grid-ready="onGridReady"
+        :localeText="localeText"
     >
     </ag-grid-vue>
     </div>
@@ -178,6 +179,14 @@ import { AgGridVue } from "ag-grid-vue";
 import jsPDF from "jspdf";
 import consts from "@/helpers/consts"
 import {url} from "@/main";
+import "@/helpers/aggrid-en"
+import "@/helpers/aggrid-ru"
+import "@/helpers/aggrid-pl"
+import "@/helpers/aggrid-ig"
+import AG_GRID_LOCALE_EN from "@/helpers/aggrid-en";
+import AG_GRID_LOCALE_RU from "@/helpers/aggrid-ru";
+import AG_GRID_LOCALE_IG from "@/helpers/aggrid-ig";
+import AG_GRID_LOCALE_PL from "@/helpers/aggrid-pl";
 
 export default {
   name: "StudentPOView",
@@ -186,6 +195,7 @@ export default {
   },
   data() {
     return {
+      localeText: null,
       selectedRow: '',
       newLogin: '',
       oldPassword: '',
@@ -247,6 +257,7 @@ export default {
   },
   beforeMount() {
     const id = localStorage.getItem('uid')
+    this.setAGGridLocale(localStorage.getItem('lang'))
     if (id == null) {
       this.$router.push('/signin')
     }
@@ -269,6 +280,22 @@ export default {
     this.updateRows(id)
   },
   methods: {
+    setAGGridLocale(lcl) {
+      switch (lcl) {
+        case 'en':
+          this.localeText = AG_GRID_LOCALE_EN;
+          break;
+        case 'ru':
+          this.localeText = AG_GRID_LOCALE_RU;
+          break;
+        case 'ing':
+          this.localeText = AG_GRID_LOCALE_IG;
+          break;
+        case 'pl':
+          this.localeText = AG_GRID_LOCALE_PL;
+          break;
+      }
+    },
     updateRows(id) {
       this.$http.get(url + "/api/" + consts.apiV + "/students/to_courses/" + id).then(
           response=>{
@@ -362,6 +389,7 @@ export default {
     setLocale(locale) {
       this.$i18n.locale = locale
       localStorage.setItem('lang', locale)
+      this.setAGGridLocale(locale)
       this.$bvToast.toast(this.$t('pageReloadToastBody'),
 {
           title: this.$t('pageReloadToast'),
