@@ -89,6 +89,7 @@ const msg = {
         alreadyApplied: 'Вы уже подали заявку на этот курс',
         success: 'Успешно',
         successApply: 'Вы успешно подали заявку на этот курс',
+        loginTaken: 'Логин уже занят',
     },
     en: {
         signIn: 'Sign In',

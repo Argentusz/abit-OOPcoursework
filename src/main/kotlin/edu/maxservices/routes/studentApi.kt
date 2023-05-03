@@ -6,6 +6,7 @@ import edu.maxservices.models.Student
 import edu.maxservices.models.StudentManager
 import edu.maxservices.plugins.Helpers
 import edu.maxservices.plugins.LogsManager
+import edu.maxservices.plugins.StudentReceiver
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -18,7 +19,6 @@ fun Route.studentApi(studentManager: StudentManager) {
     route("/api") {
         route("/v$apiV") {
             route("students") {
-
                 route("/to_courses") {
                     get("{id?}") {
                         val id = call.parameters["id"]
@@ -61,7 +61,6 @@ fun Route.studentApi(studentManager: StudentManager) {
                         }
                     }
                 }
-
                 get("{id?}") {
                     val id = call.parameters["id"]
                     if (id == null) {
@@ -77,6 +76,9 @@ fun Route.studentApi(studentManager: StudentManager) {
                 }
                 post() {
                     val student = call.receive<Student>()
+                    if (!studentManager.checkUniqueLogin(student.login)) {
+                        call.respond(HttpStatusCode.Unauthorized)
+                    }
                     call.respond(studentManager.add(student))
                 }
                 patch() {
@@ -105,6 +107,24 @@ fun Route.studentApi(studentManager: StudentManager) {
                         }
                     } else {
                         call.respond(HttpStatusCode.Forbidden)
+                    }
+                }
+                route("/check") {
+                    get("{login}") {
+                        val login = call.parameters["login"]
+                        if (login === null) {
+                            call.respond(HttpStatusCode.BadRequest)
+                        }
+                        try {
+                            val res = studentManager.checkUniqueLogin(login!!)
+                            if (res) {
+                                call.respond(HttpStatusCode.OK)
+                            }
+                            call.respond(HttpStatusCode.Unauthorized)
+                        } catch (e: Exception) {
+                            println(e)
+                            call.respond(HttpStatusCode.BadRequest)
+                        }
                     }
                 }
             }

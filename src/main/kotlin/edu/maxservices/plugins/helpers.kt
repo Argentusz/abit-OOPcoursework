@@ -17,6 +17,15 @@ data class courseFull(
     val city: String,
 ) {}
 
+
+@Serializable
+data class StudentReceiver(
+    val id: Int,
+    val name: String,
+    val login: String,
+    val password: String,
+    val scores: List<Int>
+)
 class Helpers {
 
     inner class Check {

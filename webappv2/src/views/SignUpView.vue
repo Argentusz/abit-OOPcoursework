@@ -3,7 +3,7 @@
   <Transition name="fade">
     <div class="form" v-if="step === 1">
       <img :src="require('@/assets/logo-yellow.png')" width="128px" alt="nlk"/>
-      <b-alert variant="danger" :show="notFilled">Все поля должны быть заполнены</b-alert>
+      <b-alert variant="danger" :show="loginTaken">{{$t('loginTaken')}}</b-alert>
       <b-form @submit="onSubmit()" class="B-form">
         <b-form-group
             id="input-group-1"
@@ -196,6 +196,9 @@
 </template>
 
 <script>
+import {url} from "@/main";
+import consts from "@/helpers/consts";
+
 export default {
   name: "SignInView",
   data() {
@@ -208,6 +211,7 @@ export default {
       },
       roles: [{ text: 'Войти как...', value: null }, 'Студент', 'Представитель ВУЗа'],
       notFilled: false,
+      loginTaken: false,
       step: 1,
       exams: {
         russian: null,
@@ -229,10 +233,15 @@ export default {
       }
     }
   },
+  beforeMount() {
+    if (localStorage.getItem('uid') !== null) {
+      this.$router.push('/')
+    }
+  },
   methods: {
     allowedSymbols(str, spacesAllowed = false) {
       if (spacesAllowed) {
-        return /^[a-zA-Z0-9 ]+$/.test(str);
+        return /^[a-zA-Z0-9ĄĘŻŹĆŃŚąężźćńśа-яА-Я ]+$/.test(str);
       } else {
         return /^[a-zA-Z0-9]+$/.test(str);
       }
@@ -260,41 +269,67 @@ export default {
     onCheck() {
       event.preventDefault()
       if (!this.anyFormEmpty()) {
-        this.notFilled = false
-        this.step = 2
+
+        this.$http.get(url + "/api/" + consts.apiV + "/students/check/" + this.form.login).then(
+            response=>{
+              this.notFilled = false
+              this.step = 2
+            }, err=> {
+              this.loginTaken = true
+            }
+        )
       } else {
         this.notFilled = true
       }
     },
     onSubmit() {
       event.preventDefault()
-      // TODO: Check on exams filled
-      // TODO: Send post request
-      if (!this.anyFormEmpty()) {
-        this.notFilled = false
-        let new_user = {
-          name: this.form.name,
-          login: this.form.login,
-          password: this.form.password,
-          exams: [
-              this.exams.russian,
-              this.exams.math,
-              this.exams.ingirmanlandian,
-              this.exams.english,
-              this.exams.IT,
-              this.exams.physics,
-              this.exams.literature,
-          ]
-        }
-        for (let i = 0; i < new_user.exams.length; i++) {
-          if (new_user.exams[i] == null) {
-            new_user.exams[i] = 0;
-          }
-        }
-        console.log(JSON.stringify(new_user))
-      } else {
+
+      if (this.anyFormEmpty()) {
         this.notFilled = true
+        this.step = 1
+        return
       }
+      if (!this.allExamsNormal()) {
+        return
+      }
+
+      this.$http.post(url + "/api/" + consts.apiV + "/students",
+          {
+            id: -1,
+            name: this.form.name,
+            login: this.form.login,
+            password: this.form.password,
+            scores: this.prepareScores()
+          }
+      ).then(
+          response => {
+            localStorage.setItem('uid', response.data)
+            this.$router.push('/')
+          }, err => {
+            this.loginTaken = true;
+            this.step = 1;
+          }
+      )
+    },
+    prepareScores() {
+      let scores = {
+            Russian: 0,
+            Math: 0,
+            Ingirmanlandian: 0,
+            English: 0,
+            IT: 0,
+            Physics: 0,
+            Literature: 0
+      }
+      if (this.exams.russian !== null)         scores.Russian =         this.exams.russian;
+      if (this.exams.math !== null)            scores.Math =            this.exams.math;
+      if (this.exams.ingirmanlandian !== null) scores.Ingirmanlandian = this.exams.ingirmanlandian;
+      if (this.exams.english !== null)         scores.English =         this.exams.english;
+      if (this.exams.IT !== null)              scores.IT =              this.exams.IT;
+      if (this.exams.physics !== null)         scores.Physics =         this.exams.physics;
+      if (this.exams.literature !== null)      scores.Literature =      this.exams.literature;
+      return scores
     }
   }
 }

@@ -3,6 +3,8 @@ package edu.maxservices.routes
 import edu.maxservices.apiV
 import edu.maxservices.models.Auth
 import edu.maxservices.models.AuthManager
+import edu.maxservices.models.Student
+import edu.maxservices.models.StudentManager
 import edu.maxservices.plugins.Helpers
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -25,10 +27,6 @@ fun Route.authApi(authManager: AuthManager) {
                         println(e)
                         call.respond(HttpStatusCode.Unauthorized)
                     }
-                }
-                // Registration
-                post() {
-
                 }
             }
         }

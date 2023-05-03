@@ -54,6 +54,7 @@ class StudentManager(private val conn : Connection) {
             "VALUES (?, ?)"
     private val DeleteApply = "DELETE FROM courses_to_students WHERE student_id = ? AND course_id = ? RETURNING student_id"
     private val CheckForApply = "SELECT * FROM courses_to_students WHERE student_id = ? AND course_id = ?"
+    private val CheckForUnique = "SELECT * FROM students WHERE login = ?"
     private val logger = LogsManager(this.javaClass.name)
 
     init {
@@ -145,6 +146,17 @@ class StudentManager(private val conn : Connection) {
         } catch (e: Exception) {
             throw Exception("(StudentManager.newApply) Could not make a new apply for student $studentId and course $courseId.")
         }
+    }
+
+    fun checkUniqueLogin(login: String) : Boolean {
+     val statement = conn.prepareStatement(CheckForUnique)
+     statement.setString(1, login)
+     statement.execute()
+     val resSet = statement.resultSet
+     if (resSet.next()) {
+         return false
+     }
+     return true
     }
     fun findApplies(id: Int) : List<courseFull> {
 
