@@ -53,7 +53,7 @@ class StudentManager(private val conn : Connection) {
     private val NewApplicant = "INSERT INTO courses_to_students (course_id, student_id)" +
             "VALUES (?, ?)"
     private val DeleteApply = "DELETE FROM courses_to_students WHERE student_id = ? AND course_id = ? RETURNING student_id"
-
+    private val CheckForApply = "SELECT * FROM courses_to_students WHERE student_id = ? AND course_id = ?"
     private val logger = LogsManager(this.javaClass.name)
 
     init {
@@ -126,7 +126,26 @@ class StudentManager(private val conn : Connection) {
         else throw Exception("(StudentManager.unApply) No match student=$studentId course=$courseId found.")
 
     }
+    fun newApply(studentId: Int, courseId: Int) {
+        val checkStatement = conn.prepareStatement(CheckForApply)
+        checkStatement.setInt(1, studentId)
+        checkStatement.setInt(2, courseId)
+        checkStatement.execute()
+        val resSet = checkStatement.resultSet
+        if (resSet.next()) {
+            throw Exception("(StudentManager.newApply) Already have apply for student $studentId and course $courseId.")
 
+        }
+
+        val statement = conn.prepareStatement(NewApplicant)
+        statement.setInt(1, courseId)
+        statement.setInt(2, studentId)
+        try {
+            statement.execute()
+        } catch (e: Exception) {
+            throw Exception("(StudentManager.newApply) Could not make a new apply for student $studentId and course $courseId.")
+        }
+    }
     fun findApplies(id: Int) : List<courseFull> {
 
         val statement = conn.prepareStatement(FindApplies)

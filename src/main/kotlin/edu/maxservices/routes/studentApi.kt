@@ -34,6 +34,19 @@ fun Route.studentApi(studentManager: StudentManager) {
                             }
                         }
                     }
+                    post("{student?}/{course?}") {
+                        val studentId = call.parameters["student"]
+                        val courseId = call.parameters["course"]
+                        if (studentId == null || courseId == null) {
+                            call.respond(HttpStatusCode.BadRequest)
+                        } else {
+                            try {
+                                call.respond(studentManager.newApply(studentId.toInt(), courseId.toInt()))
+                            } catch(e: Exception) {
+                                call.respond(HttpStatusCode.NotFound)
+                            }
+                        }
+                    }
                     delete("{student?}/{course?}") {
                         val studentId = call.parameters["student"]
                         val courseId = call.parameters["course"]

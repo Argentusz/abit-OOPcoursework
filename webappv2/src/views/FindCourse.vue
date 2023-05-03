@@ -7,7 +7,11 @@
     <div class="table-btns__container">
       <div class="table-buttons">
       <div class="table-btn">
-        <b-button class="b-table-btn" variant="warning"><b-icon-arrow-return-left class="mr-2"/>{{$t('applyToUn')}}</b-button>
+        <b-button
+            class="b-table-btn"
+            variant="warning"
+            @click="goApply()"
+        ><b-icon-arrow-return-left class="mr-2"/>{{$t('applyToUn')}}</b-button>
       </div>
       </div>
     </div>
@@ -37,6 +41,8 @@ import AG_GRID_LOCALE_EN from "@/helpers/aggrid-en";
 import AG_GRID_LOCALE_RU from "@/helpers/aggrid-ru";
 import AG_GRID_LOCALE_IG from "@/helpers/aggrid-ig";
 import AG_GRID_LOCALE_PL from "@/helpers/aggrid-pl";
+import {url} from "@/main";
+import consts from "@/helpers/consts";
 
 export default {
   name: "FindCourse",
@@ -47,12 +53,23 @@ export default {
     this.rowSelection = 'single';
   },
   beforeMount() {
+    const id = localStorage.getItem('uid')
     this.setAGGridLocale(localStorage.getItem('lang'))
+    if (id == null) {
+      this.$router.push('/signin')
+    }
+    this.studentId = id
+    this.$http.get(url + "/api/" + consts.apiV + "/courses/").then(
+        response=> {
+          console.log(response)
+          this.rows = response.data
+        })
   },
   data() {
     return {
       selectedRow: '',
       localeText: null,
+      studentId: -1,
       columns: [
         {
           field: "name",
@@ -60,7 +77,7 @@ export default {
           filter: true,
         },
         {
-          field: "uName",
+          field: "universityName",
           headerName: this.$t('ColumnUniversityName'),
           filter: true,
         },
@@ -93,15 +110,15 @@ export default {
 
         },
       ],
-      rows: [
-        {id:0, name: 'ИВТ', uName:'ЛИТИ', prevMinScore: 200, budgetPlaces: 50, commercePlaces: 50, planet: 'Земля', city: 'Санкт-Петербург'},
-        {id:1, name: 'УУУ', uName:'БРУЧ', prevMinScore: 220, budgetPlaces: 19, commercePlaces: 19, planet: 'Земля', city: 'Санкт-Петербург'},
-        {id:2, name: 'ЫЫЫ', uName:'ИЧМО', prevMinScore: 205, budgetPlaces: 10, commercePlaces: 27, planet: 'Земля', city: 'Санкт-Петербург'},
-        {id:3, name: 'ЯЯЯ', uName:'ХИХИ', prevMinScore: 295, budgetPlaces: 2, commercePlaces: 20, planet: 'Марс', city: 'Милки-Вэй'},
-      ]
+      rows: []
     }
   },
   methods: {
+    goApply() {
+      const courseId = this.selectedRow
+      this.$http.post(url + "/api/" + consts.apiV + "/students/to_courses/" + this.studentId + '/' + courseId,
+      )
+    },
     onSelectionChanged() {
       const selectedRows = this.gridApi.getSelectedRows();
       this.selectedRow = selectedRows[0].id;
@@ -123,6 +140,9 @@ export default {
           break;
         case 'pl':
           this.localeText = AG_GRID_LOCALE_PL;
+          break;
+        case null:
+          this.localeText = AG_GRID_LOCALE_RU;
           break;
       }
     },

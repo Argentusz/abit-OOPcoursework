@@ -294,6 +294,9 @@ export default {
         case 'pl':
           this.localeText = AG_GRID_LOCALE_PL;
           break;
+        case null:
+          this.localeText = AG_GRID_LOCALE_RU;
+          break;
       }
     },
     updateRows(id) {

@@ -4,6 +4,18 @@ import edu.maxservices.plugins.Helpers
 import edu.maxservices.plugins.LogsManager
 import kotlinx.serialization.Serializable
 import java.sql.Connection
+@Serializable
+data class CourseForTable (
+    private val id: Int,
+    private val name: String,
+    private val description: String,
+    private val prevMinScore: Int,
+    private val budgetPlaces: Int,
+    private val commercePlaces: Int,
+    private val universityName: String,
+    private val planet: String,
+    private val city: String,
+)
 
 @Serializable
 data class Course (
@@ -88,6 +100,28 @@ class CourseManager(private val conn : Connection) {
         val resSet = statement.resultSet
         return Helpers().Parse().resultSetToCourseList(resSet, conn)
     }
+
+    fun getAllForTable() : List<CourseForTable> {
+        val courseList = getAll()
+        val res = mutableListOf<CourseForTable>()
+        courseList.forEach {
+            val university = getUniversity(it.id())
+            res.add(
+                CourseForTable(
+                    id = it.id(),
+                    name = it.name(),
+                    description = it.description(),
+                    prevMinScore = it.prevMinScore(),
+                    budgetPlaces = it.budgetPlaces(),
+                    commercePlaces = it.commercePlaces(),
+                    universityName = university.name(),
+                    planet = university.planet(),
+                    city = university.city()
+            ))
+        }
+        return res;
+    }
+
 
     fun getById(id: Int) : Course {
         val statement = conn.prepareStatement(SelectById)

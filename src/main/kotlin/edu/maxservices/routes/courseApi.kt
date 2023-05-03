@@ -16,7 +16,7 @@ fun Route.courseApi(courseManager: CourseManager) {
                 get("{id?}") {
                     val id = call.parameters["id"]
                     if (id == null) {
-                        call.respond(courseManager.getAll())
+                        call.respond(courseManager.getAllForTable())
                     } else {
                         try {
                             call.respond(courseManager.getById(id.toInt()))
