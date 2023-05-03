@@ -84,7 +84,8 @@ const msg = {
         dontHaveAcc: 'Нет аккаунта',
         alreadyHaveAcc: 'Уже есть аккаунт',
         back: 'Назад',
-        applyToUn: 'Подать заявление'
+        applyToUn: 'Подать заявление',
+        showCourses: 'Показать курсы',
     },
     en: {
         signIn: 'Sign In',
@@ -167,6 +168,7 @@ const msg = {
         alreadyHaveAcc: 'Already have an account',
         back: 'Return',
         applyToUn: 'Apply',
+        showCourses: 'Show courses',
     },
     pl: {
         signIn: 'Zalogować się',
@@ -249,6 +251,7 @@ const msg = {
         alreadyHaveAcc: 'Już masz konto',
         back: 'Powrót',
         applyToUn: 'Aplikować',
+        showCourses: 'Pokaż kursy',
     },
     ing: {
         signIn: 'Kirjaudu sisään',
@@ -331,6 +334,7 @@ const msg = {
         alreadyHaveAcc: 'Onko sinulla jo tili',
         back: 'Palata',
         applyToUn: 'hakea',
+        showCourses: 'Näytä kursseja',
     }
 }
 let lcl = localStorage.getItem('lang')

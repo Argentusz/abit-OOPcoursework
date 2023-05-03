@@ -76,7 +76,7 @@ const AG_GRID_LOCALE_RU = {
     // Other
     loadingOoo: 'Загрузка...',
     loadingError: 'Ошибка',
-    noRowsToShow: 'Пусто',
+    noRowsToShow: 'Здесь пока ничего нет',
     enabled: 'Разрешено',
 
     // Menu

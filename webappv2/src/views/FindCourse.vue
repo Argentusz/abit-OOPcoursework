@@ -11,7 +11,7 @@
             class="b-table-btn"
             variant="warning"
             @click="goApply()"
-        ><b-icon-arrow-return-left class="mr-2"/>{{$t('applyToUn')}}</b-button>
+        ><b-icon-plus class="mr-2"/>{{$t('applyToUn')}}</b-button>
       </div>
       </div>
     </div>

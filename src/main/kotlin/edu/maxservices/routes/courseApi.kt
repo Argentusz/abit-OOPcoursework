@@ -13,6 +13,16 @@ fun Route.courseApi(courseManager: CourseManager) {
     route("/api") {
         route("/v$apiV") {
             route("courses") {
+                route ("default") {
+                    get() {
+                        try {
+                            call.respond(courseManager.getAll())
+                        } catch (e: Exception) {
+                            println(e)
+                            call.respond(HttpStatusCode.BadRequest)
+                        }
+                    }
+                }
                 get("{id?}") {
                     val id = call.parameters["id"]
                     if (id == null) {

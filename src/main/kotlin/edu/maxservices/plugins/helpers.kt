@@ -63,6 +63,15 @@ class Helpers {
             return res
         }
 
+        fun resultSetArrayToCourseList(resultSet: ResultSet, conn: Connection) : MutableList<Course> {
+            val res = mutableListOf<Course>()
+            while(resultSet.next()) {
+                val id = resultSet.getInt(2)
+                res.add(CourseManager(conn).getById(id))
+            }
+            return res
+        }
+
         fun resultSetToExamsHashMap(resSet: ResultSet): HashMap<Exams, Int> {
             val arrRSet = resSet.getArray("exams").resultSet
             val res = hashMapOf<Exams, Int>()
@@ -195,14 +204,13 @@ class Helpers {
         fun resultSetToUniversityList(resSet: ResultSet, conn: Connection) : List<University> {
             val res = mutableListOf<University>()
             while(resSet.next()) {
-                Helpers().Convert().resulSetArrayToMutableInt(resSet, "coursesIds")
                 res.add(
                     University (
                         resSet.getInt("id"),
                         resSet.getString("name"),
                         resSet.getString("login"),
                         resSet.getString("password"),
-                        Helpers().Parse().resultSetToCourseList(resSet, conn),
+                        Helpers().Parse().resultSetArrayOfCourseIdsToCourseList(resSet.getArray("coursesIds").resultSet, conn),
                         resSet.getString("planet"),
                         resSet.getString("city"),
                     )
@@ -259,7 +267,7 @@ class Helpers {
                     resSet.getString("name"),
                     resSet.getString("login"),
                     resSet.getString("password"),
-                    Helpers().Parse().resultSetArrayOfCourseIdsToCourseList(resSet.getArray("coursesIds").resultSet, conn),
+                    Helpers().Convert().resultSetArrayToCourseList(resSet.getArray("coursesIds").resultSet, conn),
                     resSet.getString("planet"),
                     resSet.getString("city"),
                 )

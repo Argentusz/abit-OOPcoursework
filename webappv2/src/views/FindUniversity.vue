@@ -4,14 +4,57 @@
     <div class="title">
       {{$t('findUniversity')}}
     </div>
+
+    <div class="table-btn__container">
+      <div class="table-btns">
+        <b-button
+            class="table-btn"
+            variant="warning"
+            v-if="showCourseTable === false"
+            @click="expand()"
+            :disabled="!ableToExpand()">
+          <b-icon-chevron-expand/> {{$t('showCourses')}}
+        </b-button>
+        <b-button
+            class="table-btn"
+            variant="warning"
+            v-if="showCourseTable === true"
+            @click="collapse()">
+          <b-icon-arrow-return-left/> {{$t('back')}}
+        </b-button>
+
+        <b-button
+            class="table-btn"
+            variant="warning"
+            v-if="showCourseTable === true"
+            @click="">
+          <b-icon-plus/>{{$t('applyToUn')}}
+        </b-button>
+      </div>
+    </div>
+
     <div class="table-div">
       <ag-grid-vue
-        style="width: 1000px; height: 60vh;"
+        v-if="!showCourseTable"
         class="ag-theme-balham-dark"
         :columnDefs="columns"
         :rowData="rows"
-      >
-      </ag-grid-vue>
+        :rowSelection="rowSelection"
+        @selection-changed="onSelectionChanged()"
+        @grid-ready="onGridReady"
+        :localeText="localeText"
+      />
+        <ag-grid-vue
+            v-if="showCourseTable"
+            class="ag-theme-balham-dark"
+            :columnDefs="courseColumns"
+            :rowData="courseRows"
+            :rowSelection="rowSelection"
+            @selection-changed="onCourseSelectionChanged()"
+            @grid-ready="onGridReady"
+            :localeText="localeText"
+        />
+
     </div>
   </div>
 </template>
@@ -20,66 +63,128 @@
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 import { AgGridVue } from "ag-grid-vue";
+import AG_GRID_LOCALE_EN from "@/helpers/aggrid-en";
+import AG_GRID_LOCALE_RU from "@/helpers/aggrid-ru";
+import AG_GRID_LOCALE_IG from "@/helpers/aggrid-ig";
+import AG_GRID_LOCALE_PL from "@/helpers/aggrid-pl";
+import {url} from "@/main";
+import consts from "@/helpers/consts";
 export default {
   name: "FindUniversity",
   data() {
     return {
-      columns: null,
+      columns: [
+        {
+          field: "name",
+          headerName: this.$t('ColumnUniversityName'),
+          width: 548,
+          filter: true,
+        },
+        {
+          field: "planet",
+          headerName: this.$t('ColumnUniversityPlanet'),
+          width: 200,
+          filter: true,
+        },
+        {
+          field: "city",
+          headerName: this.$t('ColumnUniversityCity'),
+          width: 400,
+          filter: true,
+        },
+      ],
+
+      courseColumns: [
+        {
+          field: "name",
+          headerName: this.$t('name'),
+          filter: true,
+        },
+        {
+          field: "prevMinScore",
+          headerName: this.$t('prevMinScore'),
+          filter: 'agNumberColumnFilter',
+        },
+        {
+          field: "budgetPlaces",
+          headerName: this.$t('budgetPlaces'),
+          width: 170,
+          filter: 'agNumberColumnFilter',
+        },
+        {
+          field: "commercePlaces",
+          headerName: this.$t('commercePlaces'),
+          width: 170,
+          filter: 'agNumberColumnFilter',
+        },
+      ],
+
       rows: null,
+      courseRows: null,
+      localeText: null,
+      rowSelection: 'single',
+      studentId: null,
+      modalShow: false,
+      showCourseTable: false,
+      selectedRow: null,
     }
   },
   components: {
     AgGridVue,
   },
   beforeMount() {
-    this.columns = [
-      {
-        field: "uName",
-        headerName: this.$t('ColumnUniversityName'),
-        width: 550,
-        filter: true, floatingFilter: true,
-        floatingFilterComponentParams: { suppressFilterButton: true },
-      },
-      {
-        field: "planet",
-        headerName: this.$t('ColumnUniversityPlanet'),
-        width: 100,
-        filter: true, floatingFilter: true,
-        floatingFilterComponentParams: { suppressFilterButton: true },
-      },
-      {
-        field: "city",
-        headerName: this.$t('ColumnUniversityCity'),
-        width: 350,
-        filter: true, floatingFilter: true,
-        floatingFilterComponentParams: { suppressFilterButton: true },
-      },
-    ];
-    this.rows = [
-      { uName: 'ЛИТИ', planet: 'Земля', city: 'Санкт-Петербург' },
-      { uName: 'БРУЧ', planet: 'Земля', city: 'Санкт-Петербург'},
-      { uName: 'ИЧМО', planet: 'Земля', city: 'Санкт-Петербург'},
-      { uName: 'ХИХИ0', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ1', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ2', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ3', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ4', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ5', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ6', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ7', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ8', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ9', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ10', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ11', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ12', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ13', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ14', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ15', planet: 'Марс', city: 'Милки-Вэй'},
-      { uName: 'ХИХИ16', planet: 'Марс', city: 'Милки-Вэй'},
-    ]
+    this.setAGGridLocale(localStorage.getItem('lang'))
+    const id = localStorage.getItem('uid')
+    if (id == null) {
+      this.$router.push('/signin')
+    }
+    this.studentId = id
+    this.$http.get(url + "/api/" + consts.apiV + "/universities/").then(
+        response=> {
+          console.log(response)
+          this.rows = response.data
+        })
   },
   methods: {
-
+    ableToExpand() {
+      return this.selectedRow !== null
+    },
+    expand() {
+      if (this.selectedRow !== null) {
+        this.showCourseTable = true;
+      }
+    },
+    collapse() {
+      this.showCourseTable = false;
+      this.selectedRow = null;
+    },
+    onSelectionChanged() {
+      const selectedRows = this.gridApi.getSelectedRows();
+      this.selectedRow = selectedRows[0].id;
+    },
+    onGridReady(params) {
+      this.gridApi = params.api;
+      this.gridColumnApi = params.columnApi;
+    },
+    setAGGridLocale(lcl) {
+      switch (lcl) {
+        case 'en':
+          this.localeText = AG_GRID_LOCALE_EN;
+          break;
+        case 'ru':
+          this.localeText = AG_GRID_LOCALE_RU;
+          break;
+        case 'ing':
+          this.localeText = AG_GRID_LOCALE_IG;
+          break;
+        case 'pl':
+          this.localeText = AG_GRID_LOCALE_PL;
+          break;
+        case null:
+          this.localeText = AG_GRID_LOCALE_RU;
+          break;
+      }
+    },
   }
 }
 </script>
@@ -117,6 +222,23 @@ export default {
   font-size: 64px;
   text-shadow: 2px 2px #ffc107;
 }
+.table-btn__container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+}
+.table-btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 60%;
+}
+.table-btn {
+  border: 2px solid black;
+  margin-left: 1px;
+  margin-right: 1px;
+}
 .table-div{
   width: 100vw;
   display: flex;
@@ -126,7 +248,11 @@ export default {
 }
 .ag-theme-balham-dark {
   --ag-odd-row-background-color: #343a40;
-  --ag-header-foreground-color: #ffc107;
-  --ag-border-color: #ffc107;
+  --ag-header-background-color: #ffc107;
+  --ag-header-foreground-color: #343a40;
+
+
+  width: 60%;
+  height: 60vh;
 }
 </style>

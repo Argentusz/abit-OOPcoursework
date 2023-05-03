@@ -74,9 +74,9 @@ const AG_GRID_LOCALE_IG = {
     rowDragRows:'rows',
 
     // Other
-    loadingOoo: 'Loading...',
-    loadingError: 'ERR',
-    noRowsToShow: 'No Rows To Show',
+    loadingOoo: 'Ladataan...',
+    loadingError: 'Virhe',
+    noRowsToShow: 'Ei näytettäviä rivejä',
     enabled: 'Enabled',
 
     // Menu

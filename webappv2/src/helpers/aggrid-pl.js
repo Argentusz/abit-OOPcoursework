@@ -74,9 +74,9 @@ const AG_GRID_LOCALE_PL = {
     rowDragRows:'rows',
 
     // Other
-    loadingOoo: 'Loading...',
-    loadingError: 'ERR',
-    noRowsToShow: 'No Rows To Show',
+    loadingOoo: 'Ładowanie...',
+    loadingError: 'Błąd',
+    noRowsToShow: 'Tu jeszcze nic nie ma',
     enabled: 'Enabled',
 
     // Menu
