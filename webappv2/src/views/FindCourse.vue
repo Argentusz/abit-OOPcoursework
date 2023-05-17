@@ -75,21 +75,24 @@ export default {
           field: "name",
           headerName: this.$t('name'),
           filter: true,
+          width: 300,
         },
         {
           field: "universityName",
           headerName: this.$t('ColumnUniversityName'),
           filter: true,
+          width: 300,
         },
         {
           field: "prevMinScore",
           headerName: this.$t('prevMinScore'),
           filter: 'agNumberColumnFilter',
+          width: 150,
         },
         {
           field: "budgetPlaces",
           headerName: this.$t('budgetPlaces'),
-          width: 170,
+          width: 160,
           filter: 'agNumberColumnFilter',
         },
         {
@@ -102,12 +105,13 @@ export default {
           field: "planet",
           headerName: this.$t('ColumnUniversityPlanet'),
           filter: true,
+          width: 100,
         },
         {
           field: "city",
           headerName: this.$t('ColumnUniversityCity'),
           filter: true,
-
+          width: 142,
         },
       ],
       rows: []
@@ -171,7 +175,7 @@ export default {
 
 <style scoped>
 .findCourse__container {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 45px);
   background: url("@/assets/circle-scatter-haikei (1).svg") repeat-x fixed left top;
   color: #fff;
   display: flex;
@@ -211,7 +215,7 @@ export default {
 }
 
 .table-div{
-  width: 70%;
+  width: 92%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -226,7 +230,7 @@ export default {
   margin-bottom: 3px;
 }
 .table-buttons {
-  width: 70%;
+  width: 92%;
   display: flex;
   flex-direction: row;
   align-items: flex-end;

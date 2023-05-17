@@ -47,7 +47,7 @@ class Helpers {
         }
         fun allowedSymbols(str: String, spaceAllowed : Boolean = false) : Boolean {
             str.forEach {
-                if(!it.isLetterOrDigit()) {
+                if(!it.isLetterOrDigit() && it != '@' && it != '.') {
                     if (!spaceAllowed || it != ' ') return false
                 }
             }

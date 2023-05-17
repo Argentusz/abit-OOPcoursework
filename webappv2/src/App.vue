@@ -18,9 +18,10 @@ import FooterComponent from "@/components/FooterComponent.vue";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #fff;
+  font-size:12px;
 }
 .routerView {
-  margin-top: 64px;
+  margin-top: 45px;
 }
 </style>
 

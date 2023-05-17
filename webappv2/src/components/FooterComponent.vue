@@ -20,7 +20,7 @@ export default {
   position: relative;
   bottom: 0;
   background-color: #343a40;
-  height: 220px;
+  height: 100px;
 }
 .sub-sign {
   margin-left: 30px;
@@ -32,10 +32,11 @@ export default {
   right: 30px;
   bottom: 10px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   width: 300px;
 }
 .flagImg {
-  width: 200px;
+  width: 100px;
+  margin-right: 5px
 }
 </style>

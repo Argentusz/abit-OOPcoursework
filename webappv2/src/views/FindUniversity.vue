@@ -77,7 +77,7 @@ export default {
         {
           field: "name",
           headerName: this.$t('ColumnUniversityName'),
-          width: 548,
+          width: 462,
           filter: true,
         },
         {
@@ -89,7 +89,7 @@ export default {
         {
           field: "city",
           headerName: this.$t('ColumnUniversityCity'),
-          width: 400,
+          width: 200,
           filter: true,
         },
       ],
@@ -99,23 +99,24 @@ export default {
           field: "name",
           headerName: this.$t('name'),
           filter: true,
+          width: 372,
         },
         {
           field: "prevMinScore",
           headerName: this.$t('prevMinScore'),
           filter: 'agNumberColumnFilter',
-          width: 200,
+          width: 150,
         },
         {
           field: "budgetPlaces",
           headerName: this.$t('budgetPlaces'),
-          width: 200,
+          width: 170,
           filter: 'agNumberColumnFilter',
         },
         {
           field: "commercePlaces",
           headerName: this.$t('commercePlaces'),
-          width: 200,
+          width: 170,
           filter: 'agNumberColumnFilter',
         },
       ],
@@ -224,7 +225,7 @@ export default {
 
 <style scoped>
 .findUniversity__container {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 45px);
   background: url("@/assets/blob-scene-haikei (2).svg") repeat-x fixed left top;
   color: #fff;
   display: flex;
@@ -271,13 +272,14 @@ export default {
   border: 2px solid black;
   margin-left: 1px;
   margin-right: 1px;
+
 }
 .table-div{
   width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 3vh;
+  margin-top: 1vh;
 }
 .ag-theme-balham-dark {
   --ag-odd-row-background-color: #343a40;

@@ -87,6 +87,9 @@ export default {
     if (localStorage.getItem('uid') !== null) {
       this.$router.push('/')
     }
+    if (localStorage.getItem('uuid') !== null) {
+      this.$router.push('/u')
+    }
   },
   methods: {
     anyFormEmpty() {
@@ -103,22 +106,31 @@ export default {
       }
     },
     auth() {
-
+      console.log('AUTH')
+      let rol = 0
+      if (this.form.role === "Student") {rol = 1} else if (this.form.role === "University") {rol = 2}
+      console.log({login: this.form.login, password: this.form.password, role: rol, name: ""})
       this.$http.patch(url + "/api/v1/auth",
-  {login: this.form.login, password: this.form.password, role: 1, name: ""}).then(
+  {login: this.form.login, password: this.form.password, role: rol, name: ""}).then(
         response=>{
           console.log(response)
           const uid = response.data
           const rs = response.status
           console.log(uid)
           console.log(rs)
-          if (rs === 200) {
-            this.wrongAuth = false
+          this.wrongAuth = false
+          if (rol === 1) {
             localStorage.setItem('uid', uid)
             this.$router.push('/')
+          } else {
+            localStorage.setItem('uuid', uid)
+            this.$router.push('/u')
           }
-      })
-      this.wrongAuth = true
+        },
+        err=>{
+          this.wrongAuth = true
+        })
+
 
     }
   }

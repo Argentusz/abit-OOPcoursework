@@ -36,7 +36,14 @@ class AuthManager(private val conn : Connection) {
                 return id
             }
             2 -> {
-                // University
+                val statement = conn.prepareStatement(loginUniversity)
+                statement.setString(1, auth.login)
+                statement.setString(2, auth.password)
+                statement.execute()
+                val resSet = statement.resultSet ?: throw Exception("University not found")
+                resSet.next()
+                id = resSet.getInt("id")
+                return id
             }
             3 -> {
                 // Admin

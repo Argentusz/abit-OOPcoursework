@@ -60,16 +60,20 @@
 
   <div>
     <div class="table-btns">
-      <b-dropdown variant="warning" right dropup >
+      <b-dropdown class="table-btn2" variant="warning" right dropup no-caret>
         <template #button-content>
-          <img height="30px" class="table-btn" :src="require('@/assets/download.svg')">
+          <div class="kostyl">
+          <b-icon-download />
+          </div>
         </template>
         <b-dropdown-item-button
+            style="font-size:12px;"
         @click="JSONConv()"
         >
           JSON
         </b-dropdown-item-button>
         <b-dropdown-item-button
+            style="font-size: 12px"
             @click="PDFConv()"
         >
           PDF
@@ -78,8 +82,8 @@
 
       <b-button
         variant="danger"
+        class="table-btn"
         @click="deleteCourse()"
-        class="ml-2"
       >
         <b-icon-trash />
       </b-button>
@@ -102,7 +106,7 @@
 
 
 
-  <div class="custom-shape-divider-bottom-1678748915">
+  <div class="custom-shape-divider-bottom-1683201338">
     <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
       <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
       <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
@@ -216,37 +220,37 @@ export default {
         {
           field: "name",
           headerName: this.$t('name'),
-          width: 400,
+          width: 300,
         },
         {
           field: "uName",
           headerName: this.$t('ColumnUniversityName'),
-          width: 400,
+          width: 300,
         },
         {
           field: "prevMinScore",
           headerName: this.$t('prevMinScore'),
-          width: 200,
+          width: 150,
         },
         {
           field: "budgetPlaces",
           headerName: this.$t('budgetPlaces'),
-          width: 200,
+          width: 160,
         },
         {
           field: "commercePlaces",
           headerName: this.$t('commercePlaces'),
-          width: 200,
+          width: 170,
         },
         {
           field: "planet",
           headerName: this.$t('ColumnUniversityPlanet'),
-          width: 150,
+          width: 100,
         },
         {
           field: "city",
           headerName: this.$t('ColumnUniversityCity'),
-          width: 260,
+          width: 150,
         },
       ],
       rows: null
@@ -440,57 +444,8 @@ export default {
   display: flex;
   flex-direction: row;
   height: 220px;
-  padding: 60px 50px 20px;
+  padding: 60px 50px 40px;
   background-color: #ffc107;
-}
-.studentPOV__bottom {
-  padding-top: 30px;
-  padding-left: 50px;
-  padding-right: 50px;
-  min-height: calc(100vh - 60px - 220px);
-
-}
-.custom-shape-divider-top-1678748417 {
-  position: absolute;
-  top: 280px;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-}
-
-.custom-shape-divider-top-1678748417 svg {
-  position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 180px;
-  transform: rotateY(180deg);
-}
-
-.custom-shape-divider-top-1678748417 .shape-fill {
-  fill: #FFC107;
-}
-
-/*bottom waves*/
-.custom-shape-divider-bottom-1678748915 {
-  position: absolute;
-  bottom: -10px;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-  transform: rotate(180deg);
-}
-
-.custom-shape-divider-bottom-1678748915 svg {
-  position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 150px;
-}
-
-.custom-shape-divider-bottom-1678748915 .shape-fill {
-  fill: #343a40;
 }
 
 .studentProfile {
@@ -510,6 +465,8 @@ export default {
 }
 .studentAvatarIcon {
   margin-bottom: 10px;
+  width: 35px;
+  height:35px;
 }
 .studentExams {
   margin-right: 10px;
@@ -522,6 +479,8 @@ export default {
 .studentSettingsBtn {
   display: flex;
   margin-bottom: 10px;
+  height: 30px;
+  font-size: 12px;
 }
 .gearIcon {
   margin-top: 1px;
@@ -532,6 +491,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 30px;
+  font-size: 12px;
 }
 .findButtons {
   display: flex;
@@ -540,21 +501,73 @@ export default {
   vertical-align: bottom;
   align-items: flex-end;
   padding: 10px 20px;
+
 }
 .findBtn {
   margin-right: 10px;
+  height: 30px;
+  font-size: 12px;
 }
+.studentPOV__bottom {
+  padding: 30px 50px 0;
+  min-height: calc(100vh - 60px - 220px);
+
+}
+.custom-shape-divider-top-1678748417 {
+  position: absolute;
+  top: 261px;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.custom-shape-divider-top-1678748417 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 130px;
+  transform: rotateY(180deg);
+}
+
+.custom-shape-divider-top-1678748417 .shape-fill {
+  fill: #FFC107;
+}
+
+.custom-shape-divider-bottom-1683201338 {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1683201338 svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 100px;
+  transform: rotateY(180deg);
+}
+
+.custom-shape-divider-bottom-1683201338 .shape-fill {
+  fill: #343A40;
+}
+
 .pickedCoursesTitle {
-  font-size: 32px;
+  font-size: 30px;
   position: relative;
   text-shadow: 2px 2px #343a40;
   z-index: 3;
-  margin-bottom: 100px;
+  margin-bottom: 40px;
 }
 .ag-theme-balham-dark {
   --ag-odd-row-background-color: #343a40;
   --ag-header-background-color: #ffc107;
   --ag-header-foreground-color: #343a40;
+
 }
 .table-btns {
   display: flex;
@@ -563,6 +576,17 @@ export default {
   margin-bottom: 5px;
 }
 .table-btn {
-  padding: 5px;
+  margin-left: 5px;
+  height: 30px;
+  font-size: 12px;
+}
+.table-btn2 {
+  display: flex;
+  flex-direction: row;
+}
+.kostyl {
+  font-size: 12px;
+  display: flex;
+  flex-direction: row;
 }
 </style>
