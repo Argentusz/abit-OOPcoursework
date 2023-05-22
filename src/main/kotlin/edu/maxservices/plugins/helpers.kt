@@ -15,6 +15,8 @@ data class courseFull(
     val commercePlaces: Int,
     val planet: String,
     val city: String,
+    val eExamDate: String,
+    val eExamAud: Int,
 ) {}
 
 
@@ -195,6 +197,8 @@ class Helpers {
                     resSet.getInt("budgetPlaces"),
                     resSet.getInt("commercePlaces"),
                     Helpers().Convert().resultSetToExamsList(resSet),
+                    resSet.getString("eExamDate"),
+                    resSet.getInt("eExamAud")
                 ))
             }
             return res
@@ -294,6 +298,8 @@ class Helpers {
                     resSet.getInt("budgetPlaces"),
                     resSet.getInt("commercePlaces"),
                     Helpers().Convert().resultSetToExamsList(resSet),
+                    resSet.getString("eExamDate"),
+                    resSet.getInt("eExamAud")
                 )
             } else {
                 null

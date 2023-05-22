@@ -27,7 +27,7 @@
             id="input-2"
             v-model="form.password"
             type="password"
-            :placeholder="$t('enterPassword') + ':'"
+            :placeholder="$t('enterPassword')"
         ></b-form-input>
       </b-form-group>
 
@@ -45,7 +45,7 @@
           value="true"
           unchecked-value="false"
       >
-        {{ $t('shortCoincidentalWarning') }}
+        <div style="font-size: 1rem">{{ $t('shortCoincidentalWarning') }}</div>
       </b-form-checkbox>
 
       <b-button

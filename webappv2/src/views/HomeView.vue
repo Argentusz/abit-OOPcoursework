@@ -28,7 +28,7 @@ export default {
 <style scoped>
 .home__container {
   background: url("@/assets/hellopagebg.png") repeat-x fixed left top;
-
+  background-size: 1600px 900px;
   width: 100vw;
   top: 0;
   margin:0;

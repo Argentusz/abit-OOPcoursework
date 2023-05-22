@@ -83,7 +83,7 @@
       <b-button
         variant="danger"
         class="table-btn"
-        @click="deleteCourse()"
+        @click="deleteCourseShow = true"
       >
         <b-icon-trash />
       </b-button>
@@ -173,6 +173,38 @@
         @click="updatePassword()"
     >{{$t('save')}}<b-icon-check/></b-button>
   </b-sidebar>
+  <b-modal
+      v-model="deleteCourseShow"
+      :title="$t('cancelApply')"
+      :header-bg-variant="'warning'"
+      :header-border-variant="'warning'"
+      :body-bg-variant="'dark'"
+      :body-text-variant="'light'"
+      :footer-bg-variant="'dark'"
+      :footer-border-variant="'dark'"
+  >
+    {{$t('areYouSureDeletingCourse')}}
+    <template #modal-footer>
+      <div class="w-100">
+        <b-button
+            variant="success"
+            size="sm"
+            class="float-right"
+            @click="deleteCourseShow = false"
+        >
+          Close
+        </b-button>
+        <b-button
+            variant="danger"
+            size="sm"
+            class="float-right mr-2"
+            @click="deleteCourse()"
+        >
+          OK
+        </b-button>
+      </div>
+    </template>
+  </b-modal>
 </div>
 </template>
 
@@ -199,6 +231,7 @@ export default {
   },
   data() {
     return {
+      deleteCourseShow: false,
       localeText: null,
       selectedRow: '',
       newLogin: '',
@@ -251,6 +284,16 @@ export default {
           field: "city",
           headerName: this.$t('ColumnUniversityCity'),
           width: 150,
+        },
+        {
+          field: "eExamDate",
+          headerName: this.$t('ColumnEExamDate'),
+          width: 200,
+        },
+        {
+          field: "eExamAud",
+          headerName: this.$t('ColumnEExamAud'),
+          width: 200,
         },
       ],
       rows: null

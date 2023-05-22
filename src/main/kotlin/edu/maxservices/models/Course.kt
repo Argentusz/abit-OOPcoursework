@@ -15,6 +15,8 @@ data class CourseForTable (
     private val universityName: String,
     private val planet: String,
     private val city: String,
+    private val eExamDate: String,
+    private val eExamAud: Int,
 )
 
 @Serializable
@@ -26,6 +28,8 @@ data class Course (
     private val budgetPlaces: Int,
     private val commercePlaces: Int,
     private val requiredExams: List<Exams>,
+    private val eExamDate: String,
+    private val eExamAud: Int,
 ) {
     // Getters
     fun id() : Int {
@@ -49,6 +53,12 @@ data class Course (
     fun requiredExams(): List<Exams> {
         return requiredExams.toList()
     }
+    fun eExamDate() : String {
+        return eExamDate
+    }
+    fun eExamAud() : Int {
+        return eExamAud
+    }
 }
 
 class CourseManager(private val conn : Connection) {
@@ -60,7 +70,9 @@ class CourseManager(private val conn : Connection) {
                 "    prevMinScore INTEGER NOT NULL DEFAULT 0," +
                 "    budgetPlaces INTEGER NOT NULL DEFAULT 0," +
                 "    commercePlaces INTEGER NOT NULL DEFAULT 0," +
-                "    requiredExams INTEGER[] DEFAULT array[]::integer[]" +
+                "    requiredExams INTEGER[] DEFAULT array[]::integer[]," +
+                "    eExamDate TEXT NOT NULL DEFAULT ''," +
+                "    eExamAud INTEGER NOT NULL DEFAULT 0" +
                 ");"
     private val CoursesToStudentsTableCreate =
         "CREATE TABLE IF NOT EXISTS courses_to_students (" +
@@ -73,7 +85,7 @@ class CourseManager(private val conn : Connection) {
             "VALUES (?, ?, ?, ?, ?, ?) RETURNING id;"
     private val Update = "UPDATE courses SET name = ?, description = ?, prevMinScore = ?, budgetPlaces = ?, commercePlaces = ?, requiredExams = ?" +
             " WHERE id = ?"
-    private val DeleteById = "DELETE FROM courses WHERE id = ? RETURNING id"
+    private val DeleteById = "DELETE FROM courses_to_students WHERE course_id = ?; DELETE FROM courses WHERE id = ? RETURNING id"
     private val FindApplicants = "SELECT * FROM courses_to_students WHERE course_id = ?"
     private val NewApplicant = "INSERT INTO courses_to_students (course_id, student_id)" +
             "VALUES (?, ?, ?)"
@@ -116,7 +128,9 @@ class CourseManager(private val conn : Connection) {
                     commercePlaces = it.commercePlaces(),
                     universityName = university.name(),
                     planet = university.planet(),
-                    city = university.city()
+                    city = university.city(),
+                    eExamDate = it.eExamDate(),
+                    eExamAud = it.eExamAud()
             ))
         }
         return res;
@@ -163,6 +177,7 @@ class CourseManager(private val conn : Connection) {
     fun deleteById(id: Int) : Int {
         val statement = conn.prepareStatement(DeleteById)
         statement.setInt(1, id)
+        statement.setInt(2, id)
         statement.execute()
         val resSet = statement.resultSet
         if (resSet.next()) return resSet.getInt("id")

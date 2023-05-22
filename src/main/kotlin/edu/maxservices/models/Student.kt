@@ -184,6 +184,8 @@ class StudentManager(private val conn : Connection) {
                 commercePlaces = course.commercePlaces(),
                 planet = university.planet(),
                 city = university.city(),
+                eExamDate = course.eExamDate(),
+                eExamAud = course.eExamAud()
             )
             res.add(resItem)
         }

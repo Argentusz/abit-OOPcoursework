@@ -75,13 +75,13 @@ export default {
           field: "name",
           headerName: this.$t('name'),
           filter: true,
-          width: 300,
+          width: 200,
         },
         {
           field: "universityName",
           headerName: this.$t('ColumnUniversityName'),
           filter: true,
-          width: 300,
+          width: 200,
         },
         {
           field: "prevMinScore",
@@ -112,6 +112,16 @@ export default {
           headerName: this.$t('ColumnUniversityCity'),
           filter: true,
           width: 142,
+        },
+        {
+          field: "eExamDate",
+          headerName: this.$t('ColumnEExamDate'),
+          width: 200,
+        },
+        {
+          field: "eExamAud",
+          headerName: this.$t('ColumnEExamAud'),
+          width: 200,
         },
       ],
       rows: []
