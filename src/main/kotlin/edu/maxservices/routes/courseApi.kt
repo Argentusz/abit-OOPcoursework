@@ -3,6 +3,7 @@ package edu.maxservices.routes
 import edu.maxservices.apiV
 import edu.maxservices.models.Course
 import edu.maxservices.models.CourseManager
+import edu.maxservices.models.UniversityManager
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -23,6 +24,21 @@ fun Route.courseApi(courseManager: CourseManager) {
                         }
                     }
                 }
+                route("to_students") {
+                    get("{cid?}") {
+                        val cid = call.parameters["cid"]
+                        if (cid == null) {
+                            call.respond(HttpStatusCode.BadRequest)
+                        } else {
+                            try {
+                                call.respond(courseManager.findApplicants(cid.toInt()))
+                            } catch (e: Exception) {
+                                println(e)
+                                call.respond(HttpStatusCode.BadRequest)
+                            }
+                        }
+                    }
+                }
                 get("{id?}") {
                     val id = call.parameters["id"]
                     if (id == null) {
@@ -36,9 +52,16 @@ fun Route.courseApi(courseManager: CourseManager) {
                         }
                     }
                 }
-                post() {
+                post("{uid?}") {
                     val course = call.receive<Course>()
-                    call.respond(courseManager.add(course))
+                    val uid = call.parameters["uid"]
+                    if (uid == null) {
+                        call.respond(HttpStatusCode.BadRequest)
+                    } else {
+                        val res = courseManager.add(course, uid.toInt())
+                        call.respond(res)
+                    }
+
                 }
                 patch() {
                     val course = call.receive<Course>()

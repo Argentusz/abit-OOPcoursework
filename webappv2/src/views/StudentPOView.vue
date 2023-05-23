@@ -187,7 +187,7 @@
     <template #modal-footer>
       <div class="w-100">
         <b-button
-            variant="success"
+            variant="warning"
             size="sm"
             class="float-right"
             @click="deleteCourseShow = false"
@@ -254,46 +254,64 @@ export default {
           field: "name",
           headerName: this.$t('name'),
           width: 300,
+          sortable: true,
+
         },
         {
           field: "uName",
           headerName: this.$t('ColumnUniversityName'),
           width: 300,
+          sortable: true,
+
         },
         {
           field: "prevMinScore",
           headerName: this.$t('prevMinScore'),
           width: 150,
+          sortable: true,
+
         },
         {
           field: "budgetPlaces",
           headerName: this.$t('budgetPlaces'),
           width: 160,
+          sortable: true,
+
         },
         {
           field: "commercePlaces",
           headerName: this.$t('commercePlaces'),
           width: 170,
+          sortable: true,
+
         },
         {
           field: "planet",
           headerName: this.$t('ColumnUniversityPlanet'),
           width: 100,
+          sortable: true,
+
         },
         {
           field: "city",
           headerName: this.$t('ColumnUniversityCity'),
           width: 150,
+          sortable: true,
+
         },
         {
           field: "eExamDate",
           headerName: this.$t('ColumnEExamDate'),
           width: 200,
+          sortable: true,
+
         },
         {
           field: "eExamAud",
           headerName: this.$t('ColumnEExamAud'),
           width: 200,
+          sortable: true,
+
         },
       ],
       rows: null
@@ -461,7 +479,7 @@ export default {
     PDFConv() {
       let dataStr = ""
       this.rows.forEach(i=>{
-        dataStr += i.name + " " + i.uName + " " + i.prevMinScore + " " + i.budgetPlaces + " " + i.commercePlaces + " " + i.planet + " " + i.city + "\r\n"
+        dataStr += i.name + " " + i.uName + " " + i.prevMinScore + " " + i.budgetPlaces + " " + i.commercePlaces + "\n" + i.planet + " " + i.city + "\r\n\r\n"
       })
       const customFont = consts.font
       const doc = new jsPDF()

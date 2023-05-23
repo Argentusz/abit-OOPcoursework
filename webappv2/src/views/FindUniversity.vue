@@ -79,18 +79,21 @@ export default {
           headerName: this.$t('ColumnUniversityName'),
           width: 462,
           filter: true,
+          sortable: true,
         },
         {
           field: "planet",
           headerName: this.$t('ColumnUniversityPlanet'),
           width: 200,
           filter: true,
+          sortable: true,
         },
         {
           field: "city",
           headerName: this.$t('ColumnUniversityCity'),
           width: 200,
           filter: true,
+          sortable: true,
         },
       ],
 
@@ -99,12 +102,14 @@ export default {
           field: "name",
           headerName: this.$t('name'),
           filter: true,
+          sortable: true,
           width: 372,
         },
         {
           field: "prevMinScore",
           headerName: this.$t('prevMinScore'),
           filter: 'agNumberColumnFilter',
+          sortable: true,
           width: 150,
         },
         {
@@ -112,12 +117,14 @@ export default {
           headerName: this.$t('budgetPlaces'),
           width: 170,
           filter: 'agNumberColumnFilter',
+          sortable: true,
         },
         {
           field: "commercePlaces",
           headerName: this.$t('commercePlaces'),
           width: 170,
           filter: 'agNumberColumnFilter',
+          sortable: true,
         },
       ],
 

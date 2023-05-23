@@ -55,7 +55,7 @@
             value="true"
             unchecked-value="false"
         >
-          {{ $t('shortCoincidentalWarning') }}
+          <div style="font-size: 1rem">{{ $t('shortCoincidentalWarning') }}</div>
         </b-form-checkbox>
 
         <b-button
@@ -398,6 +398,10 @@ export default {
 .examInput {
   width: 200px;
   height: 24px;
+  font-size: 12px;
+}
+.checkboxName {
+
 }
 .examInputDiv {
   display: flex;

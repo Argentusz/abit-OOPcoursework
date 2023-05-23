@@ -44,13 +44,12 @@ class UniversityManager(private val conn : Connection) {
     private val Update = "UPDATE universities SET name = ?, login = ?, password = ?, coursesIds = ?, planet = ?, city = ?" +
             " WHERE id = ? RETURNING id"
     private val DeleteById = "DELETE FROM universities WHERE id = ? RETURNING id"
-
+    private val NewCourse = "UPDATE universities SET coursesIds = coursesIds || ? WHERE id = ? RETURNING id"
     private val logger = LogsManager(this.javaClass.name)
 
 
     init {
         createTable()
-        logger.log("Initialized University Manager")
     }
 
     fun createTable() {
@@ -112,5 +111,14 @@ class UniversityManager(private val conn : Connection) {
         if (resSet.next()) return resSet.getInt("id")
         else throw Exception("(UniversityManager.deleteById) No university with id = $id found.")
     }
+    fun addNewCourse(cid: Int, uid: Int) : Int {
+        val statement = conn.prepareStatement(NewCourse)
+        statement.setInt(1, cid)
+        statement.setInt(2, uid)
+        statement.execute()
+        val resSet = statement.resultSet
+        if (resSet.next()) return resSet.getInt("id")
+        else throw Exception("(UniversityManager.addNewCourse) No university with id = $uid found.")
 
+    }
 }

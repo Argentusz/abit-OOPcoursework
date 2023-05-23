@@ -81,21 +81,20 @@ class CourseManager(private val conn : Connection) {
                 ");"
     private val SelectById = "SELECT * FROM courses WHERE id = ?"
     private val SelectAll = "SELECT * FROM courses;"
-    private val Insert = "INSERT INTO courses (name, description, prevMinScore, budgetPlaces, commercePlaces, requiredExams)" +
-            "VALUES (?, ?, ?, ?, ?, ?) RETURNING id;"
-    private val Update = "UPDATE courses SET name = ?, description = ?, prevMinScore = ?, budgetPlaces = ?, commercePlaces = ?, requiredExams = ?" +
+    private val Insert = "INSERT INTO courses (name, description, prevMinScore, budgetPlaces, commercePlaces, requiredExams, eexamdate, eexamaud)" +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id;"
+    private val Update = "UPDATE courses SET name = ?, description = ?, prevMinScore = ?, budgetPlaces = ?, commercePlaces = ?, requiredExams = ?, eexamdate = ?, eexamaud = ?" +
             " WHERE id = ?"
-    private val DeleteById = "DELETE FROM courses_to_students WHERE course_id = ?; DELETE FROM courses WHERE id = ? RETURNING id"
+    private val DeleteById = "DELETE FROM courses_to_students WHERE course_id = ?; DELETE FROM courses WHERE id = ?; UPDATE universities SET coursesids = array_remove(coursesids, ?)"
     private val FindApplicants = "SELECT * FROM courses_to_students WHERE course_id = ?"
     private val NewApplicant = "INSERT INTO courses_to_students (course_id, student_id)" +
-            "VALUES (?, ?, ?)"
+            "VALUES (?, ?)"
     private val GetUniversity = "SELECT * FROM universities WHERE ? = ANY(coursesids)"
 
     private val logger = LogsManager(this.javaClass.name)
 
     init {
         createTables()
-        logger.log("Initialized Course Manager")
     }
 
     fun createTables() {
@@ -146,7 +145,7 @@ class CourseManager(private val conn : Connection) {
         if (res != null) return res
         else throw Exception("(CourseManager.getById) No course with id = $id found.")
     }
-    fun add(course: Course) : Int {
+    fun add(course: Course, uid: Int) : Int {
         val statement = conn.prepareStatement(Insert)
         statement.setString(1, course.name())
         statement.setString(2, course.description())
@@ -154,13 +153,17 @@ class CourseManager(private val conn : Connection) {
         statement.setInt(4, course.budgetPlaces())
         statement.setInt(5, course.commercePlaces())
         statement.setArray(6, Helpers().Convert().examsListToIntArraySQL(course.requiredExams(), conn))
+        statement.setString(7, course.eExamDate())
+        statement.setInt(8, course.eExamAud())
         statement.execute()
         val res = statement.resultSet
-        return if (res.next()) {
-            res.getInt("id")
+        if (res.next()) {
+            val id = res.getInt("id")
+            UniversityManager(conn).addNewCourse(id, uid)
         } else {
-            -1
+            throw Exception("Unexpected error while inserting (courseManager.add())")
         }
+        return -1
     }
 
     fun change(course: Course) {
@@ -178,18 +181,29 @@ class CourseManager(private val conn : Connection) {
         val statement = conn.prepareStatement(DeleteById)
         statement.setInt(1, id)
         statement.setInt(2, id)
+        statement.setInt(3, id)
         statement.execute()
-        val resSet = statement.resultSet
-        if (resSet.next()) return resSet.getInt("id")
-        else throw Exception("(courseManager.deleteById) No course with id = $id found.")
+//        val resSet = statement.resultSet
+//        if (resSet.next()) return resSet.getInt("id")
+//        else throw Exception("(courseManager.deleteById) No course with id = $id found.")
+        return 0
     }
 
-    fun findApplicants(courseId: Int, conn: Connection) : List<Student> {
+    fun findApplicants(courseId: Int) : List<Student> {
         val statement = conn.prepareStatement(FindApplicants)
-
+        statement.setInt(1, courseId)
         statement.execute()
         val resSet = statement.resultSet
-        return Helpers().Parse().resultSetToStudentList(resSet)
+        val sids = mutableListOf<Int>()
+        while (resSet.next()) {
+            sids.add(resSet.getInt("student_id"))
+        }
+        val studentManager = StudentManager(conn)
+        val res = mutableListOf<Student>()
+        for (v in sids) {
+            res.add(studentManager.getById(v))
+        }
+        return res
     }
 
     fun newApplicant(student: Student, course: Course, conn: Connection) {

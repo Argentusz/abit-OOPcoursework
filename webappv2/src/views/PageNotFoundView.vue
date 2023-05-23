@@ -27,9 +27,9 @@ export default {
 
 <style scoped>
 .err404 {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 45px);
   width: 100vw;
-  background-image: url("@/assets/404.png");
+  background-color: black;
 }
 .mars-pic {
   position: absolute;
@@ -38,22 +38,22 @@ export default {
   z-index: 2;
 }
 .mars-pic-img {
-
+width: 1047px;
 }
 .err-text {
   font-size: 64px;
   position: absolute;
   z-index:1;
-  left: 950px;
-  top: 325px;
+  left: 680px;
+  top: 180px;
   text-align: center;
 }
 .err-subtext {
   font-size: 55px;
   position: absolute;
   z-index: 3;
-  left: 720px;
-  top: 500px;
+  left: 600px;
+  top: 375px;
   text-align: center;
   text-shadow: 2px 2px #343a40;
 }

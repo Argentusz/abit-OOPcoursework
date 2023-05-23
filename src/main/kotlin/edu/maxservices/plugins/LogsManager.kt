@@ -23,7 +23,6 @@ class LogsManager(
             SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(Date())
                     + " ${this.javaClass.name} info: Initialized LogsManager\n"
         )
-        jLog.info(" Initialized LogsManager")
     }
     fun log(str: String) {
         threadPool.submit {

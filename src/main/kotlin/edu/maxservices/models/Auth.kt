@@ -18,7 +18,7 @@ class AuthManager(private val conn : Connection) {
     private val loginUniversity = "SELECT id FROM universities WHERE login = ? AND password = ?"
     private val logger = LogsManager(this.javaClass.name)
     init {
-        logger.log("Initialized Auth Manager")
+
     }
     fun login(auth: Auth) : Int {
         var id: Int = 0;

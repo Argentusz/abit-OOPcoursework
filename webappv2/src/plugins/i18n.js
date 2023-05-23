@@ -94,6 +94,11 @@ const msg = {
         successApply: 'Вы успешно подали заявку на этот курс',
         loginTaken: 'Логин уже занят',
         areYouSureDeletingCourse: 'Вы уверены, что хотите отменить заявку?',
+        showApplicants: 'Показать абитуриентов',
+        dateFmt: 'дд.мм.гггг',
+        cancelCourse: 'Удалить курс',
+        areYouSureDeletingCourseU: 'Вы уверены, что хотите удалить курс?',
+        delete: 'Удалить'
     },
     en: {
         signIn: 'Sign In',
@@ -184,7 +189,11 @@ const msg = {
         success: 'Success',
         successApply: 'You have successfully applied to this course',
         areYouSureDeletingCourse: 'Are you sure you want to cancel apply?',
-
+        showApplicants: 'Show applicants',
+        dateFmt: 'dd.mm.yyyy',
+        cancelCourse: 'Delete course',
+        areYouSureDeletingCourseU: 'Are you sure you want to delete this course?',
+        delete: 'Delete'
     },
     pl: {
         signIn: 'Zalogować się',
@@ -275,7 +284,11 @@ const msg = {
         success: 'Sukces',
         successApply: 'Zgłosiłeś się na ten kurs',
         areYouSureDeletingCourse: 'Czy jesteś pewien że chcesz anulować aplikacje?',
-
+        showApplicants: 'Wyświetl petentów',
+        dateFmt: 'dd.mm.rrrr',
+        cancelCourse: 'Usuń kurs',
+        areYouSureDeletingCourseU: 'Czy jesteś pewien że chcesz usunąć ten kurs?',
+        delete: 'Usuń'
     },
     ing: {
         signIn: 'Kirjaudu sisään',
@@ -362,7 +375,14 @@ const msg = {
         alreadyApplied: 'Olet jo hakenut tälle kurssille',
         success: 'Menestys',
         successApply: 'Olet hakenut tälle kurssille',
-
+        areYouSureDeletingCourse: 'Czy jesteś pewien że chcesz anulować aplikacje?',
+        showApplicants: 'Wyświetl petentów',
+        ColumnEExamDate: 'Data egzamin',
+        ColumnEExamAud: 'Auditorium egzamin',
+        cancelApply: 'Anuluj aplikacje',
+        cancelCourse: 'Usuń kurs',
+        areYouSureDeletingCourseU: 'Czy jesteś pewien że chcesz usunąć ten kurs?',
+        delete: 'Usuń'
     }
 }
 let lcl = localStorage.getItem('lang')

@@ -59,7 +59,6 @@ class StudentManager(private val conn : Connection) {
 
     init {
         createTable()
-        logger.log("Initialized Student Manager")
     }
     fun createTable() {
         val statement = conn.createStatement()
