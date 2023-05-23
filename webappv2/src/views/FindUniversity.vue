@@ -151,7 +151,6 @@ export default {
     this.studentId = id
     this.$http.get(url + "/api/" + consts.apiV + "/universities/").then(
         response=> {
-          console.log(response)
           this.rows = response.data
         })
   },

@@ -100,24 +100,18 @@ export default {
       event.preventDefault()
       if (!this.anyFormEmpty()) {
         this.wrongAuth = false
-        console.log(JSON.stringify(this.form))
       } else {
         this.wrongAuth = true
       }
     },
     auth() {
-      console.log('AUTH')
       let rol = 0
       if (this.form.role === "Student") {rol = 1} else if (this.form.role === "University") {rol = 2}
-      console.log({login: this.form.login, password: this.form.password, role: rol, name: ""})
       this.$http.patch(url + "/api/v1/auth",
   {login: this.form.login, password: this.form.password, role: rol, name: ""}).then(
         response=>{
-          console.log(response)
           const uid = response.data
           const rs = response.status
-          console.log(uid)
-          console.log(rs)
           this.wrongAuth = false
           if (rol === 1) {
             localStorage.setItem('uid', uid)

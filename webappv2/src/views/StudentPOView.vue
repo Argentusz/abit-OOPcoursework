@@ -328,7 +328,6 @@ export default {
     }
     this.$http.get(url + "/api/" + consts.apiV + "/students/" + id).then(
         response=> {
-          console.log(response)
           this.studentData.name = response.data.name
           this.studentData.exams[0] = response.data.scores.Russian
           this.studentData.exams[1] = response.data.scores.Math
@@ -367,7 +366,6 @@ export default {
     updateRows(id) {
       this.$http.get(url + "/api/" + consts.apiV + "/students/to_courses/" + id).then(
           response=>{
-            console.log(response)
             this.rows = response.data
           }
       )
@@ -394,9 +392,6 @@ export default {
     },
     updatePassword() {
       if (!this.passwordStrong(this.newPassword) || !this.allowedSymbols(this.newPassword)) {
-        console.log(this.newPassword)
-        console.log(this.passwordStrong(this.newPassword))
-        console.log(this.allowedSymbols(this.newPassword))
         this.newPasswordStrong = false
         return
       } else {
@@ -442,7 +437,6 @@ export default {
       this.gridColumnApi = params.columnApi;
     },
     deleteCourse() {
-      console.log('Delete ' + this.selectedRow + ' ' + this.studentData.id)
       this.$http.delete(url + "/api/" + consts.apiV + "/students/to_courses/" + this.studentData.id + "/" + this.selectedRow).then(response=>{this.updateRows(this.studentData.id)})
 
     },
@@ -469,7 +463,6 @@ export default {
     },
     JSONConv() {
       const a = document.createElement("a");
-      console.log(JSON.stringify(this.rows))
       let text = JSON.stringify(this.rows, null, '\t')
       const file = new Blob([text], {type: 'application/json'});
       a.href = URL.createObjectURL(file);

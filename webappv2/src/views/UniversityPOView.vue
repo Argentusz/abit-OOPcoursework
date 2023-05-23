@@ -405,7 +405,6 @@ export default {
         this.universityData.login = response.data.login
         this.universityData.id = response.data.id
         this.rows = response.data.courses
-        console.log(response)
       }
     )
   },
@@ -425,7 +424,6 @@ export default {
         this.showApplicants = true
         this.$http.get(url + "/api/" + consts.apiV + "/courses/to_students/" + this.selectedRow).then(
             response=>{
-              console.log(response)
               this.rowsAppl = response.data
               this.applsShown = this.rowsAppl.length
             }
@@ -505,7 +503,6 @@ export default {
     },
     JSONConv() {
       const a = document.createElement("a");
-      console.log(JSON.stringify(this.rows))
       let text = JSON.stringify(this.rows, null, '\t')
       const file = new Blob([text], {type: 'application/json'});
       a.href = URL.createObjectURL(file);
