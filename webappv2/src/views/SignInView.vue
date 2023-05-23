@@ -98,11 +98,7 @@ export default {
     },
     onSubmit() {
       event.preventDefault()
-      if (!this.anyFormEmpty()) {
-        this.wrongAuth = false
-      } else {
-        this.wrongAuth = true
-      }
+      this.wrongAuth = this.anyFormEmpty();
     },
     auth() {
       let rol = 0
@@ -111,7 +107,6 @@ export default {
   {login: this.form.login, password: this.form.password, role: rol, name: ""}).then(
         response=>{
           const uid = response.data
-          const rs = response.status
           this.wrongAuth = false
           if (rol === 1) {
             localStorage.setItem('uid', uid)

@@ -556,26 +556,7 @@ export default {
   color: #fff;
   background-color: #0b0b0c;
 }
-.universityPOV__top {
-  display: flex;
-  flex-direction: row;
-  padding: 60px 50px 20px;
-  border-bottom: #343a40 2px solid;
-  background-color: #ffc107;
-}
-.universityProfile {
-  background-color: #343a40;
-  border-radius: 25px;
-  width: fit-content;
-  padding: 10px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.universityAvatarIcon {
-  margin-bottom: 5px;
-}
+
 .controlPanelTitle {
   font-size: 22px;
   align-self: center;
