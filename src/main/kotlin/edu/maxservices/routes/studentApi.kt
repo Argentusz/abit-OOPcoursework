@@ -14,7 +14,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.studentApi(studentManager: StudentManager) {
-    val logger = LogsManager(this.javaClass.name)
 
     route("/api") {
         route("/v$apiV") {
@@ -29,7 +28,7 @@ fun Route.studentApi(studentManager: StudentManager) {
                                 call.respond(studentManager.findApplies(id.toInt()))
 
                             } catch(e: Exception) {
-                                logger.log("Exception students/to_courses: $e")
+                                studentManager.err(e)
                                 call.respond(HttpStatusCode.BadRequest)
                             }
                         }
@@ -43,6 +42,7 @@ fun Route.studentApi(studentManager: StudentManager) {
                             try {
                                 call.respond(studentManager.newApply(studentId.toInt(), courseId.toInt()))
                             } catch(e: Exception) {
+                                studentManager.err(e)
                                 call.respond(HttpStatusCode.NotFound)
                             }
                         }
@@ -56,6 +56,7 @@ fun Route.studentApi(studentManager: StudentManager) {
                             try {
                                 call.respond(studentManager.unApply(studentId.toInt(), courseId.toInt()))
                             } catch(e: Exception) {
+                                studentManager.err(e)
                                 call.respond(HttpStatusCode.NotFound)
                             }
                         }
@@ -69,7 +70,7 @@ fun Route.studentApi(studentManager: StudentManager) {
                         try {
                             call.respond(studentManager.getById(id.toInt()))
                         } catch (e: Exception) {
-                            println(e)
+                            studentManager.err(e)
                             call.respond(HttpStatusCode.BadRequest)
                         }
                     }
@@ -93,6 +94,7 @@ fun Route.studentApi(studentManager: StudentManager) {
                     )) {
                         call.respond(studentManager.change(student))
                     } else {
+                        studentManager.err("Registration check of login = ${student.login} password = ${student.password} not passed")
                         call.respond(HttpStatusCode.BadRequest)
                     }
                 }
@@ -102,7 +104,7 @@ fun Route.studentApi(studentManager: StudentManager) {
                         try {
                             call.respond(studentManager.deleteById(id.toInt()))
                         } catch (e: Exception) {
-                            println(e)
+                            studentManager.err(e)
                             call.respond(HttpStatusCode.BadRequest)
                         }
                     } else {
@@ -122,7 +124,7 @@ fun Route.studentApi(studentManager: StudentManager) {
                             }
                             call.respond(HttpStatusCode.Unauthorized)
                         } catch (e: Exception) {
-                            println(e)
+                            studentManager.err(e)
                             call.respond(HttpStatusCode.BadRequest)
                         }
                     }

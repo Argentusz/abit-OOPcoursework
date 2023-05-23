@@ -46,7 +46,9 @@ class UniversityManager(private val conn : Connection) {
     private val DeleteById = "DELETE FROM universities WHERE id = ? RETURNING id"
     private val NewCourse = "UPDATE universities SET coursesIds = coursesIds || ? WHERE id = ? RETURNING id"
     private val logger = LogsManager(this.javaClass.name)
-
+    fun log(str: String) { this.logger.log(str) }
+    fun err(str: String) {this.logger.err(str)}
+    fun err(e: Exception) {this.logger.err(e.toString())}
 
     init {
         createTable()

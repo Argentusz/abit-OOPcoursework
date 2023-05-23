@@ -34,6 +34,16 @@ class LogsManager(
         }
     }
 
+    fun err(str: String) {
+        threadPool.submit {
+            fileObj.appendText( "ERROR: " +
+                SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(Date())
+                        + " $caller ERR: $str\n"
+            )
+            jLog.info(str)
+        }
+    }
+
 //    fun warning(str: String) {
 //        fileObj.appendText(SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(Date())
 //                + " $caller warning: $str\n"

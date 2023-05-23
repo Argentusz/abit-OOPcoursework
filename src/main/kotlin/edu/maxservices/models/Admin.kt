@@ -1,6 +1,7 @@
 package edu.maxservices.models
 
 import edu.maxservices.plugins.Helpers
+import edu.maxservices.plugins.LogsManager
 import kotlinx.serialization.Serializable
 import java.sql.Connection
 
@@ -27,6 +28,10 @@ class AdminManager(private val conn: Connection) {
     private val Update = "UPDATE admins SET name = ?, login = ?, password = ?" +
             " WHERE id = ? RETURNING id"
     private val DeleteById = "DELETE FROM admins WHERE id = ? RETURNING id"
+    private val logger = LogsManager(this.javaClass.name)
+    fun log(str: String) { this.logger.log(str) }
+    fun err(str: String) {this.logger.err(str)}
+    fun err(e: Exception) {this.logger.err(e.toString())}
 
     init {
         createTable()

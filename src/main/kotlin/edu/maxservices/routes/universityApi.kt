@@ -21,7 +21,7 @@ fun Route.universityApi(universityManager: UniversityManager) {
                         try {
                             call.respond(universityManager.getById(id.toInt()))
                         } catch (e: Exception) {
-                            println(e)
+                            universityManager.err(e)
                             call.respond(HttpStatusCode.BadRequest)
                         }
                     }
@@ -36,7 +36,7 @@ fun Route.universityApi(universityManager: UniversityManager) {
                         val id = universityManager.change(university)
                         call.respond(id)
                     } catch (e: Exception) {
-                        println(e)
+                        universityManager.err(e)
                         call.respond(HttpStatusCode.BadRequest)
                     }
                 }
@@ -46,7 +46,7 @@ fun Route.universityApi(universityManager: UniversityManager) {
                         try {
                             call.respond(universityManager.deleteById(id.toInt()))
                         } catch (e: Exception) {
-                            println(e)
+                            universityManager.err(e)
                             call.respond(HttpStatusCode.BadRequest)
                         }
                     } else {

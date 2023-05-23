@@ -92,6 +92,9 @@ class CourseManager(private val conn : Connection) {
     private val GetUniversity = "SELECT * FROM universities WHERE ? = ANY(coursesids)"
 
     private val logger = LogsManager(this.javaClass.name)
+    fun log(str: String) { this.logger.log(str) }
+    fun err(str: String) {this.logger.err(str)}
+    fun err(e: Exception) {this.logger.err(e.toString())}
 
     init {
         createTables()

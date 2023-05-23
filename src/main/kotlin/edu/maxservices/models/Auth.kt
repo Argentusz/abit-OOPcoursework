@@ -17,6 +17,10 @@ class AuthManager(private val conn : Connection) {
     private val loginStudent = "SELECT id FROM students WHERE login = ? AND password = ?"
     private val loginUniversity = "SELECT id FROM universities WHERE login = ? AND password = ?"
     private val logger = LogsManager(this.javaClass.name)
+    fun log(str: String) { this.logger.log(str) }
+    fun err(str: String) {this.logger.err(str)}
+    fun err(e: Exception) {this.logger.err(e.toString())}
+
     init {
 
     }

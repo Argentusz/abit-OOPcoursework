@@ -19,7 +19,7 @@ fun Route.courseApi(courseManager: CourseManager) {
                         try {
                             call.respond(courseManager.getAll())
                         } catch (e: Exception) {
-                            println(e)
+                            courseManager.err(e)
                             call.respond(HttpStatusCode.BadRequest)
                         }
                     }
@@ -33,7 +33,7 @@ fun Route.courseApi(courseManager: CourseManager) {
                             try {
                                 call.respond(courseManager.findApplicants(cid.toInt()))
                             } catch (e: Exception) {
-                                println(e)
+                                courseManager.err(e)
                                 call.respond(HttpStatusCode.BadRequest)
                             }
                         }
@@ -47,7 +47,7 @@ fun Route.courseApi(courseManager: CourseManager) {
                         try {
                             call.respond(courseManager.getById(id.toInt()))
                         } catch (e: Exception) {
-                            println(e)
+                            courseManager.err(e)
                             call.respond(HttpStatusCode.BadRequest)
                         }
                     }
@@ -73,7 +73,7 @@ fun Route.courseApi(courseManager: CourseManager) {
                         try {
                             call.respond(courseManager.deleteById(id.toInt()))
                         } catch (e: Exception) {
-                            println(e)
+                            courseManager.err(e)
                             call.respond(HttpStatusCode.BadRequest)
                         }
                     } else {

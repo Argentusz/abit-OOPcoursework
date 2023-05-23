@@ -24,7 +24,7 @@ fun Route.authApi(authManager: AuthManager) {
                         val id = authManager.login(auth)
                         call.respond(id)
                     } catch (e: Exception) {
-                        println(e)
+                        authManager.err(e)
                         call.respond(HttpStatusCode.Unauthorized)
                     }
                 }

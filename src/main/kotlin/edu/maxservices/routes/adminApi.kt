@@ -21,7 +21,7 @@ fun Route.adminApi(adminManager: AdminManager) {
                         try {
                             call.respond(adminManager.getById(id.toInt()))
                         } catch (e: Exception) {
-                            println(e)
+                            adminManager.err(e)
                             call.respond(HttpStatusCode.BadRequest)
                         }
                     }
@@ -40,7 +40,7 @@ fun Route.adminApi(adminManager: AdminManager) {
                         try {
                             call.respond(adminManager.deleteById(id.toInt()))
                         } catch (e: Exception) {
-                            println(e)
+                            adminManager.err(e)
                             call.respond(HttpStatusCode.BadRequest)
                         }
                     } else {

@@ -56,10 +56,13 @@ class StudentManager(private val conn : Connection) {
     private val CheckForApply = "SELECT * FROM courses_to_students WHERE student_id = ? AND course_id = ?"
     private val CheckForUnique = "SELECT * FROM students WHERE login = ?"
     private val logger = LogsManager(this.javaClass.name)
-
+    fun log(str: String) { this.logger.log(str) }
+    fun err(str: String) {this.logger.err(str)}
+    fun err(e: Exception) {this.logger.err(e.toString())}
     init {
         createTable()
     }
+
     fun createTable() {
         val statement = conn.createStatement()
         statement.execute(TableCreate)
