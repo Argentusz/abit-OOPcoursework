@@ -4,6 +4,9 @@ import kotlinx.serialization.Serializable
 import java.sql.Array
 import java.sql.Connection
 import java.sql.ResultSet
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 @Serializable
 data class courseFull(
@@ -31,6 +34,38 @@ data class StudentReceiver(
 class Helpers {
 
     inner class Check {
+        fun newCourseCheck(course: Course, uid: Int, conn: Connection) {
+            if (course.name() == "") {
+                throw Exception("newCourseCheck: Bad data - Empty name")
+            }
+            if (course.eExamAud() < 0 || course.budgetPlaces() < 0 || course.commercePlaces() < 0 || course.prevMinScore() < 0) {
+                throw Exception("newCourseCheck: Bad data - Negative Numbers")
+
+            }
+            val formatter = SimpleDateFormat("dd.mm.yyyy", Locale.getDefault())
+            val date = formatter.parse(course.eExamDate())
+
+            val university = UniversityManager(conn).getById(uid)
+            val exCourses = university.getCourses()
+            var courseExamDate = course.eExamDate()
+            if (course.eExamDate()[0] == '0') {
+                courseExamDate = courseExamDate.drop(1)
+            }
+            exCourses.forEach {
+                if (course.name() == it.name()) {
+                    throw Exception("Non-unique name")
+                }
+                var itExamDate = it.eExamDate()
+                if (it.eExamDate()[0] == '0') {
+                    itExamDate = itExamDate.drop(1)
+                }
+
+                if (course.eExamAud() == it.eExamAud() &&
+                    courseExamDate == itExamDate) {
+                    throw Exception("Non-unique exam Aud&Date")
+                }
+            }
+        }
         fun loginCheck(auth: Auth) : Boolean {
             if (authAllowedSymbols(auth)) return true
             else throw Exception("Symbols are not allowed")
@@ -232,18 +267,6 @@ class Helpers {
             return res
         }
 
-        fun resultSetToAdminList(resSet: ResultSet) : List<Admin> {
-            val res = mutableListOf<Admin>()
-            while (resSet.next()) {
-                res.add(Admin(
-                    resSet.getInt("id"),
-                    resSet.getString("name"),
-                    resSet.getString("login"),
-                    resSet.getString("password")
-                ))
-            }
-            return res
-        }
 
         fun resultSetToStudent(resSet: ResultSet) : Student? {
             return if (resSet.next()) {
@@ -260,18 +283,7 @@ class Helpers {
         }
 
 
-        fun resultSetToAdmin(resSet: ResultSet) : Admin? {
-            return if (resSet.next()) {
-                Admin(
-                    resSet.getInt("id"),
-                    resSet.getString("name"),
-                    resSet.getString("login"),
-                    resSet.getString("password")
-                )
-            } else {
-                null
-            }
-        }
+
 
         fun resultSetToUniversity(resSet: ResultSet, conn: Connection) : University? {
             return if (resSet.next()) {

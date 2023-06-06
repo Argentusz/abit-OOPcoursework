@@ -98,7 +98,11 @@ const msg = {
         dateFmt: 'дд.мм.гггг',
         cancelCourse: 'Удалить курс',
         areYouSureDeletingCourseU: 'Вы уверены, что хотите удалить курс?',
-        delete: 'Удалить'
+        delete: 'Удалить',
+        allFieldsMustBeFilled: 'Все поля должны быть заполнены',
+        checkForUniq: 'Проверьте уникальность и формат полей: Название и Дата+Аудитория экзамена',
+        successApplyUn: 'Абитуриент добавлен в конкурс по курсу',
+        alreadyAppliedUn: 'Абитуриент уже подал заявку на этот курс',
     },
     en: {
         signIn: 'Sign In',
@@ -193,7 +197,11 @@ const msg = {
         dateFmt: 'dd.mm.yyyy',
         cancelCourse: 'Delete course',
         areYouSureDeletingCourseU: 'Are you sure you want to delete this course?',
-        delete: 'Delete'
+        delete: 'Delete',
+        allFieldsMustBeFilled: 'All fields must be filled',
+        checkForUniq: 'Check uniqueness and format of the following fields: Name and Date&Auditory of exam',
+        successApplyUn: 'Enrollee successfully added to course',
+        alreadyAppliedUn: 'Enrollee had already applied to this course',
     },
     pl: {
         signIn: 'Zalogować się',
@@ -288,7 +296,11 @@ const msg = {
         dateFmt: 'dd.mm.rrrr',
         cancelCourse: 'Usuń kurs',
         areYouSureDeletingCourseU: 'Czy jesteś pewien że chcesz usunąć ten kurs?',
-        delete: 'Usuń'
+        delete: 'Usuń',
+        allFieldsMustBeFilled: 'Wszystkie pola muszą być wypełnione',
+        checkForUniq: 'Sprawdź unikalność oraz format następujących pól: Nazwa i Data&Audiencja egzaminu',
+        successApplyUn: 'Kandydat został dodawany do kursu',
+        alreadyAppliedUn: 'Kandydat już zaaplikował do tego kursu',
     },
     ing: {
         signIn: 'Kirjaudu sisään',

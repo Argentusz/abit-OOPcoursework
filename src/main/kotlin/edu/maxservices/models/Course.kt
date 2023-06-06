@@ -149,6 +149,11 @@ class CourseManager(private val conn : Connection) {
         else throw Exception("(CourseManager.getById) No course with id = $id found.")
     }
     fun add(course: Course, uid: Int) : Int {
+        try {
+            Helpers().Check().newCourseCheck(course, uid, conn)
+        } catch (e: Exception) {
+            throw e
+        }
         val statement = conn.prepareStatement(Insert)
         statement.setString(1, course.name())
         statement.setString(2, course.description())

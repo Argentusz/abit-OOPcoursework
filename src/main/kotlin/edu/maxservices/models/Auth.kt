@@ -10,7 +10,7 @@ class Auth (
     val login: String,
     val password: String,
     val name: String,
-    val role: Int, // 1 - Student, 2 - University, 3 - Admin
+    val role: Int, // 1 - Student, 2 - University
 ) {}
 
 class AuthManager(private val conn : Connection) {

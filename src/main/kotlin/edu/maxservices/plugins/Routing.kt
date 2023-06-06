@@ -12,13 +12,11 @@ fun Application.configureRouting() {
     val studentManager = StudentManager(dbConn)
     val universityManager = UniversityManager(dbConn)
     val courseManager = CourseManager(dbConn)
-    val adminManager = AdminManager(dbConn)
     val authManager = AuthManager(dbConn)
     routing {
         studentApi(studentManager)
         universityApi(universityManager)
         courseApi(courseManager)
-        adminApi(adminManager)
         authApi(authManager)
     }
 }

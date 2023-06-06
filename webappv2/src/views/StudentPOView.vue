@@ -322,6 +322,7 @@ export default {
   },
   beforeMount() {
     const id = localStorage.getItem('uid')
+    this.studentData.id = id;
     this.setAGGridLocale(localStorage.getItem('lang'))
     if (id == null) {
       this.$router.push('/signin')
@@ -437,7 +438,11 @@ export default {
       this.gridColumnApi = params.columnApi;
     },
     deleteCourse() {
-      this.$http.delete(url + "/api/" + consts.apiV + "/students/to_courses/" + this.studentData.id + "/" + this.selectedRow).then(response=>{this.updateRows(this.studentData.id)})
+      this.$http.delete(url + "/api/" + consts.apiV + "/students/to_courses/" + this.studentData.id + "/" + this.selectedRow)
+          .then(response=>{
+            this.updateRows(this.studentData.id);
+            this.deleteCourseShow = false;
+          })
 
     },
     makeInitials() {
@@ -498,7 +503,7 @@ export default {
   display: flex;
   flex-direction: row;
   height: 220px;
-  padding: 60px 50px 40px;
+  padding: 40px 50px 30px;
   background-color: #ffc107;
 }
 
@@ -509,6 +514,7 @@ export default {
   padding: 10px 20px;
   display: flex;
   flex-direction: row;
+  height: 160px;
 }
 .studentAvatar {
   margin-right: 30px;
@@ -554,7 +560,7 @@ export default {
   justify-content: flex-start;
   vertical-align: bottom;
   align-items: flex-end;
-  padding: 10px 20px;
+  padding: 30px 20px 0;
 
 }
 .findBtn {

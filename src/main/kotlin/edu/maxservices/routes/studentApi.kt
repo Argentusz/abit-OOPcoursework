@@ -76,11 +76,26 @@ fun Route.studentApi(studentManager: StudentManager) {
                     }
                 }
                 post() {
+
                     val student = call.receive<Student>()
                     if (!studentManager.checkUniqueLogin(student.login)) {
+                        studentManager.err("Non-unique new login ${student.login}")
                         call.respond(HttpStatusCode.Unauthorized)
+                        return@post
                     }
-                    call.respond(studentManager.add(student))
+                    if (student.password.length < 8 || !Helpers().Check().examsCheck(student.getScores()) ||
+                        !Helpers().Check().allowedSymbols(student.login, false)
+                        || !Helpers().Check().allowedSymbols(student.password, false)) {
+                            call.respond(HttpStatusCode.Unauthorized)
+                            studentManager.err("student wrong: $student")
+                        return@post
+                    }
+                    try {
+                        call.respond(studentManager.add(student))
+                        return@post
+                    } catch(e : Exception) {
+                        studentManager.err(e)
+                    }
                 }
                 patch() {
                     val student = call.receive<Student>()

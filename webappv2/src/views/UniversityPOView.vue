@@ -1,21 +1,5 @@
 <template>
   <div class="universityPOV__container">
-<!--    <div class="universityPOV__top">-->
-<!--      <div class="universityProfile">-->
-<!--        <b-avatar class="universityAvatarIcon" variant="primary" :text="makeInitials()"/>-->
-<!--        {{ universityData.name }}-->
-<!--        <b-button variant="danger"-->
-<!--                  @click="exit()"-->
-<!--                  class="exitBtn">-->
-
-<!--          <b-icon-box-arrow-right class="gearIcon"/>{{$t('exit')}}-->
-
-<!--        </b-button>-->
-<!--      </div>-->
-<!--      <div class="controlPanelTitle">-->
-<!--        {{ $t('controlPanelTitle') }}-->
-<!--      </div>-->
-<!--    </div>-->
     <div class="universityPOV__bottom">
       <div class="custom-shape-divider-top-1678748417">
         <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -36,7 +20,7 @@
           <b-icon-box-arrow-right class="gearIcon"/>{{$t('exit')}}
         </b-button>
       </div>
-      <div v-if="!showApplicants">
+      <div v-if="!showApplicants && !showAddAppl">
       <div class="newCourseBtn">
         <div class="controlPanelTitle">
           {{$t('controlPanelTitle')}}
@@ -81,6 +65,7 @@
         <b-button
             variant="danger"
             class="tableBtn"
+            :disabled="selectedRow===''"
             @click="deleteCourseShow = true"
         >
           <b-icon-trash-fill/>
@@ -103,6 +88,9 @@
       </div>
       </div>
       <div v-if="showApplicants">
+        <div class="controlPanelTitle">
+          Всего абитуриентов: {{rowsAppl.length}}
+        </div>
         <div class="newCourseBtn">
           <b-button variant="warning"
             @click="goToU"
@@ -110,8 +98,16 @@
           >
             <b-icon-arrow-return-left/> {{$t('back')}}
           </b-button>
-          <div class="controlPanelTitle">
-            Всего абитуриентов: {{rowsAppl.length}}
+          <div>
+            <b-button variant="danger"
+                      :disabled="selectedRowAppl === ''"
+                      class="fs12 tableBtn"
+                      @click="deleteApplyShow = true">
+              <b-icon-trash-fill/>
+            </b-button>
+            <b-button variant="warning" class="fs12 tableBtn" @click="showAddAppl = true; showApplicants = false;">
+              <b-icon-person-plus-fill/>
+            </b-button>
           </div>
         </div>
         <div class="table">
@@ -130,6 +126,36 @@
         <div class="undertale">
           Отображено абитуриентов: {{applsShown}}
         </div>
+      </div>
+      <div v-if="showAddAppl">
+        <div class="controlPanelTitle">
+          Добавить абитуриента
+        </div>
+        <div class="newCourseBtn">
+          <b-button variant="warning" class="fs12 tableBtn" @click="showAddAppl = false; showApplicants = true; selectedRowAll = ''; selectedRowAppl = ''">
+            <b-icon-arrow-return-left/> {{$t('back')}}
+          </b-button>
+          <div>
+          <b-button variant="warning" class="fs12 tableBtn" :disabled="selectedRowAll === ''" @click="apply()">
+            <b-icon-person-check-fill/>
+          </b-button>
+          <b-button class="fs12 tableBtn" @click="showGenerateStudent = true">
+            <b-icon-node-plus-fill/>
+          </b-button>
+            </div>
+        </div>
+        <ag-grid-vue
+            style="width: 100%; height: 30vh;"
+            class="ag-theme-balham-dark"
+            :columnDefs="columnsAppl"
+            :rowData="rowsAll"
+            :rowSelection="rowSelection"
+            @selection-changed="onSelectionChangedAll()"
+            @grid-ready="onGridReady"
+            :localeText="localeText"
+        />
+
+
       </div>
       <div class="custom-shape-divider-bottom-1683201338">
         <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -152,7 +178,8 @@
                :footer-bg-variant="'dark'"
                :footer-border-variant="'dark'"
       >
-        <b-alert variant="danger" :show="newCourseUnfilled">{{$t('error')}}</b-alert>
+        <b-alert variant="danger" :show="newCourseUnfilled">{{$t('allFieldsMustBeFilled')}}</b-alert>
+        <b-alert variant="danger" :show="newCourseNonUnique">{{ $t('checkForUniq') }}</b-alert>
         {{$t('name')}}
         <b-form-input class="my-2"
                       :placeholder="$t('name')" type="text"
@@ -198,7 +225,45 @@
           </div>
         </div>
       </b-modal>
+      <b-modal
+          v-model="showGenerateStudent"
+          id="new-student-modal"
+          :title="'Зарегистрировать'"
+          :header-bg-variant="'warning'"
+          :header-border-variant="'warning'"
+          :body-bg-variant="'dark'"
+          :body-text-variant="'light'"
+          :footer-bg-variant="'dark'"
+          :footer-border-variant="'dark'"
+          ok-variant="success"
+          cancel-variant="warning"
+          :ok-title="$t('finish')"
+          :cancel-title="$t('cancel')"
+          @ok="regNewSt"
+      >
+        <b-alert v-if="errorWhileReg">{{ $t('error') }}</b-alert>
+        {{$t('fullName')}}
+        <b-form-input v-model="newStudent.name" :label="$t('fullName')"></b-form-input>
+        {{$t('login')}}
+        <b-form-input v-model="newStudent.login" :label="$t('login')">Login</b-form-input>
+        {{$t('password')}}
+        <b-form-input v-model="newStudent.password" :label="$t('password')">Password</b-form-input>
+        {{$t('russian')}}
+        <b-form-input v-model="newStudent.exams.russian" :label="$t('russian')"></b-form-input>
+        {{$t('math')}}
+        <b-form-input v-model="newStudent.exams.math" :label="$t('math')"></b-form-input>
+        {{$t('ingirmanlandian')}}
+        <b-form-input v-model="newStudent.exams.ingirmanlandian" :label="$t('ingirmanlandian')"></b-form-input>
+        {{$t('english')}}
+        <b-form-input v-model="newStudent.exams.english" :label="$t('english')"></b-form-input>
+        {{$t('IT')}}
+        <b-form-input v-model="newStudent.exams.IT" :label="$t('IT')"></b-form-input>
+        {{$t('physics')}}
+        <b-form-input v-model="newStudent.exams.physics" :label="$t('physics')"></b-form-input>
+        {{$t('literature')}}
+        <b-form-input v-model="newStudent.exams.literature" :label="$t('literature')"></b-form-input>
 
+      </b-modal>
       <b-modal
           v-model="deleteCourseShow"
           :title="$t('cancelCourse')"
@@ -214,6 +279,22 @@
           :cancel-title="$t('cancel')"
           @ok="deleteCourse()"
       >{{$t('areYouSureDeletingCourseU')}}</b-modal>
+
+      <b-modal
+          v-model="deleteApplyShow"
+          :title="$t('cancelApply')"
+          :header-bg-variant="'warning'"
+          :header-border-variant="'warning'"
+          :body-bg-variant="'dark'"
+          :body-text-variant="'light'"
+          :footer-bg-variant="'dark'"
+          :footer-border-variant="'dark'"
+          ok-variant="danger"
+          cancel-variant="warning"
+          :ok-title="$t('delete')"
+          :cancel-title="$t('cancel')"
+          @ok="unApply()"
+      >{{$t('areYouSureDeletingCourse')}}</b-modal>
 
     </div>
   </div>
@@ -242,14 +323,42 @@ export default {
   },
   data() {
     return {
+      errorWhileReg: false,
       gridApi: null,
       showApplicants: false,
+      showAddAppl: false,
       localeText: null,
       selectedRow: '',
+      showGenerateStudent: false,
       selectedRowAppl: '',
+      selectedRowAll: '',
       applsShown: 0,
       deleteCourseShow: false,
+      deleteApplyShow: false,
       universityData: {name: null, login: null, id: null},
+      newStudent: {
+        name: null,
+        login: null,
+        password: null,
+        exams: {
+          russian: 0,
+          math: 0,
+          ingirmanlandian: 0,
+          english: 0,
+          IT: 0,
+          physics: 0,
+          literature: 0,
+        },
+        exams__passed: {
+          russian: true,
+          math: true,
+          ingirmanlandian: false,
+          english: false,
+          IT: false,
+          physics: false,
+          literature: false,
+        }
+      },
       columns: [
         {
           field: "name",
@@ -367,7 +476,9 @@ export default {
       ],
       rows: [],
       rowsAppl: [],
+      rowsAll: [],
       newCourseUnfilled: false,
+      newCourseNonUnique: false,
       newCourseData: {
         name: null,
         prevMinScore: null,
@@ -405,10 +516,167 @@ export default {
         this.universityData.login = response.data.login
         this.universityData.id = response.data.id
         this.rows = response.data.courses
+        this.$http.get(url + "/api/" + consts.apiV + "/students").then (
+            response=>{
+              this.rowsAll = response.data
+            }
+        )
       }
     )
   },
   methods: {
+    allowedSymbols(str, spacesAllowed = false) {
+      if (spacesAllowed) {
+        return /^[a-zA-Z0-9ĄĘŻŹĆŃŚąężźćńśа-яА-Я ]+$/.test(str);
+      } else {
+        return /^[a-zA-Z0-9]+$/.test(str);
+      }
+    },
+    checkNewSt() {
+
+      let jesterror = false
+
+      if ( !this.newStudent.login || !this.newStudent.name) {
+        jesterror = true
+        this.$bvToast.toast('Логин и имя не должны быть пустыми',
+            {
+              title: this.$t('error'),
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-bottom-right'
+            }
+        )
+      }
+      if (!this.allowedSymbols(this.newStudent.login) || !this.allowedSymbols(this.newStudent.password) || !this.allowedSymbols(this.newStudent.name, true)) {
+        jesterror = true
+        this.$bvToast.toast('Запрещённые символы в логине, имени или пароле',
+            {
+              title: this.$t('error'),
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-bottom-right'
+            }
+        )
+      }
+      if (
+          this.newStudent.exams.russian > 100 || this.newStudent.exams.russian < 0 ||
+          this.newStudent.exams.math > 100 || this.newStudent.exams.math < 0 ||
+          this.newStudent.exams.ingirmanlandian > 100 || this.newStudent.exams.ingirmanlandian < 0 ||
+          this.newStudent.exams.english > 100 || this.newStudent.exams.english < 0 ||
+          this.newStudent.exams.IT > 100 || this.newStudent.exams.IT < 0 ||
+          this.newStudent.exams.physics > 100 || this.newStudent.exams.physics < 0 ||
+          this.newStudent.exams.literature > 100 || this.newStudent.exams.literature < 0
+      ) {
+        jesterror = true
+        this.$bvToast.toast('Оценка за экзамен - число от 0 до 100',
+            {
+              title: this.$t('error'),
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-bottom-right'
+            }
+        )
+      }
+      if (this.newStudent.password === null || this.newStudent.password.length < 8) {
+        jesterror = true
+        this.$bvToast.toast('Длина пароля не должна быть меньше 8',
+            {
+              title: this.$t('error'),
+              variant: 'danger',
+              solid: true,
+              toaster: 'b-toaster-bottom-right'
+            }
+        )
+      }
+      return jesterror
+    },
+    regNewSt(bvModalEvent) {
+      bvModalEvent.preventDefault()
+      if (this.checkNewSt()) {
+        return
+      }
+      this.$http.post(url + "/api/" + consts.apiV + "/students",
+          {
+            id: -1,
+            name: this.newStudent.name,
+            login: this.newStudent.login,
+            password: this.newStudent.password,
+            scores: this.prepareScores()
+          }
+      ).then(
+          response => {
+            this.$bvModal.hide('new-student-modal')
+            let newid = response.data
+            this.errorWhileReg = false
+            this.$http.get(url + "/api/" + consts.apiV + "/students").then (
+                response=>{
+                  this.rowsAll = response.data
+                },
+                err => {
+                  this.errorWhileReg = true
+                }
+            )
+            this.$http.post(url + "/api/" + consts.apiV + "/students/to_courses/" + newid + "/" + this.selectedRow).then(
+                response=>{
+                  this.$bvToast.toast(this.$t('successApplyUn'),
+                      {
+                        title: this.$t('success'),
+                        variant: 'success',
+                        solid: true,
+                        toaster: 'b-toaster-bottom-right'
+                      }
+                  )
+                  this.$http.get(url + "/api/" + consts.apiV + "/courses/to_students/" + this.selectedRow).then(
+                      response=>{
+                        this.rowsAppl = response.data
+                        this.applsShown = this.rowsAppl.length
+                      }
+                  )
+                },
+                err=>{
+                  this.errorWhileReg = true
+                  this.$bvToast.toast(this.$t('alreadyAppliedUn'),
+                      {
+                        title: this.$t('error'),
+                        variant: 'danger',
+                        solid: true,
+                        toaster: 'b-toaster-bottom-right'
+                      }
+                  )
+                }
+            )
+          }, err => {
+            this.errorWhileReg = true
+            this.$bvToast.toast(this.$t('loginTaken'),
+                {
+                  title: this.$t('error'),
+                  variant: 'danger',
+                  solid: true,
+                  toaster: 'b-toaster-bottom-right'
+                }
+            )
+          }
+      )
+    },
+    prepareScores() {
+      let scores = {
+        Russian: 0,
+        Math: 0,
+        Ingirmanlandian: 0,
+        English: 0,
+        IT: 0,
+        Physics: 0,
+        Literature: 0
+      }
+      if (this.newStudent.exams.russian !== null)         scores.Russian =         this.newStudent.exams.russian;
+      if (this.newStudent.exams.math !== null)            scores.Math =            this.newStudent.exams.math;
+      if (this.newStudent.exams.ingirmanlandian !== null) scores.Ingirmanlandian = this.newStudent.exams.ingirmanlandian;
+      if (this.newStudent.exams.english !== null)         scores.English =         this.newStudent.exams.english;
+      if (this.newStudent.exams.IT !== null)              scores.IT =              this.newStudent.exams.IT;
+      if (this.newStudent.exams.physics !== null)         scores.Physics =         this.newStudent.exams.physics;
+      if (this.newStudent.exams.literature !== null)      scores.Literature =      this.newStudent.exams.literature;
+      return scores
+    },
     updateRows() {
       this.$http.get(url + "/api/" + consts.apiV + "/universities/" + this.universityData.id).then(
           response=> {
@@ -437,7 +705,7 @@ export default {
     },
     deleteCourse() {
       const cid = this.selectedRow
-      this.$http.delete(url + "/api/" + consts.apiV + "/courses/" + cid).then(response=>{this.updateRows()})
+      this.$http.delete(url + "/api/" + consts.apiV + "/courses/" + cid).then(response=>{this.updateRows(); this.selectedRow = ''})
     },
     exit() {
       localStorage.clear()
@@ -449,8 +717,22 @@ export default {
       }
       return ''
     },
+    checkFilling() {
+      return !(this.newCourseData.name === null ||
+          this.newCourseData.prevMinScore === null ||
+          this.newCourseData.budgetPlaces === null ||
+          this.newCourseData.commercePlaces === null ||
+          this.newCourseData.eExamDate === null ||
+          this.newCourseData.eExamAud === null);
+
+    },
     newCourse(bvModalEvent) {
       bvModalEvent.preventDefault()
+      if (this.checkFilling() === false) {
+        this.newCourseUnfilled = true
+        return
+      }
+      this.newCourseUnfilled = false
       let xmz = []
       if (this.newCourseData.exams.russian === true) {
         xmz.push('Russian')
@@ -481,17 +763,30 @@ export default {
         response=> {
           this.updateRows()
           this.$bvModal.hide('new-course-modal')
+          this.newCourseNonUnique = false
+          this.newCourseData.name = null
+          this.newCourseData.prevMinScore = null
+          this.newCourseData.budgetPlaces = null
+          this.newCourseData.commercePlaces = null
+          this.newCourseData.eExamDate = null
+          this.newCourseData.eExamAud = null
+          this.newCourseData.exams.russian = true
+          this.newCourseData.exams.math = true
+          this.newCourseData.exams.ingirmanlandian = false
+          this.newCourseData.exams.english = false
+          this.newCourseData.exams.IT = false
+          this.newCourseData.exams.physics = false
+          this.newCourseData.exams.literature = false
         },
         err => {
-          this.newCourseUnfilled = true
-
+          this.newCourseNonUnique = true
         }
       )
     },
     PDFConv() {
       let dataStr = ""
       this.rows.forEach(i=>{
-        dataStr+=i.name + " " + i.prevMinScore + " " + i.budgetPlaces + " " + i.commercePlaces + " " + i.eExamDate + " " + i.eExamAud + "\r\n\r\n"
+        dataStr+=i.name + " " + i.prevMinScore + " " + i.budgetPlaces + " " + i.commercePlaces + "\r\n" + i.eExamDate + " " + i.eExamAud + "\r\n\r\n"
       })
       const customFont = consts.font
       const doc = new jsPDF()
@@ -520,6 +815,55 @@ export default {
       if (selectedRows[0] !== undefined) {
         this.selectedRowAppl = selectedRows[0].id;
       }
+    },
+    onSelectionChangedAll() {
+      const selectedRows = this.gridApi.getSelectedRows();
+      if (selectedRows[0] !== undefined) {
+        this.selectedRowAll = selectedRows[0].id;
+      }
+    },
+    unApply() {
+      this.$http.delete(url + "/api/" + consts.apiV + "/students/to_courses/" + this.selectedRowAppl + "/" + this.selectedRow).then(
+          response=>{
+            this.$http.get(url + "/api/" + consts.apiV + "/courses/to_students/" + this.selectedRow).then(
+                response=>{
+                  this.rowsAppl = response.data
+                  this.applsShown = this.rowsAppl.length
+                  this.selectedRowAppl = ''
+                }
+            )
+          }
+      )
+    },
+    apply() {
+      this.$http.post(url + "/api/" + consts.apiV + "/students/to_courses/" + this.selectedRowAll + "/" + this.selectedRow).then(
+        response=>{
+          this.$bvToast.toast(this.$t('successApplyUn'),
+              {
+                title: this.$t('success'),
+                variant: 'success',
+                solid: true,
+                toaster: 'b-toaster-bottom-right'
+              }
+          )
+          this.$http.get(url + "/api/" + consts.apiV + "/courses/to_students/" + this.selectedRow).then(
+              response=>{
+                this.rowsAppl = response.data
+                this.applsShown = this.rowsAppl.length
+              }
+          )
+        },
+        err=>{
+          this.$bvToast.toast(this.$t('alreadyAppliedUn'),
+              {
+                title: this.$t('error'),
+                variant: 'danger',
+                solid: true,
+                toaster: 'b-toaster-bottom-right'
+              }
+          )
+        }
+      )
     },
     onGridReady(params) {
       this.gridApi = params.api;
@@ -664,4 +1008,8 @@ export default {
 .gearIcon {
   margin-right: 2px;
 }
+.fs12 {
+  font-size: 12px;
+}
+
 </style>

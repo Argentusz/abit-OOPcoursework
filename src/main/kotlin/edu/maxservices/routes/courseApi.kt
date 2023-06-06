@@ -58,8 +58,14 @@ fun Route.courseApi(courseManager: CourseManager) {
                     if (uid == null) {
                         call.respond(HttpStatusCode.BadRequest)
                     } else {
-                        val res = courseManager.add(course, uid.toInt())
-                        call.respond(res)
+                        try {
+                            val res = courseManager.add(course, uid.toInt())
+                            call.respond(res)
+                        } catch (e: Exception) {
+                            courseManager.err(e)
+                            call.respond(HttpStatusCode.BadRequest)
+
+                        }
                     }
 
                 }
